@@ -26,10 +26,10 @@ const fragmentMono = Fragment_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://cevop.com'),
   title: 'Cevop — Restaurant Operations Platform',
-  description: 'QR ordering, live kitchen display, and real-time management for restaurants. No app download required. Start free for 14 days.',
+  description: 'QR ordering, live service display, and real-time management for restaurants. No app download required. Start free for 14 days.',
   openGraph: {
     title: 'Cevop — Restaurant Operations Platform',
-    description: 'QR ordering, live kitchen display, and real-time management for restaurants. No app download required. Start free for 14 days.',
+    description: 'QR ordering, live service display, and real-time management for restaurants. No app download required. Start free for 14 days.',
     type: 'website',
     siteName: 'Cevop',
     url: 'https://cevop.com',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Cevop — Restaurant Operations Platform',
-    description: 'QR ordering, live kitchen display, and real-time management for restaurants.',
+    description: 'QR ordering, live service display, and real-time management for restaurants.',
     images: ['/opengraph-image.png'],
   },
   alternates: {

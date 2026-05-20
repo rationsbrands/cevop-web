@@ -38,7 +38,7 @@ function PhoneMockup() {
   )
 }
 
-function KitchenMockup() {
+function ServiceMockup() {
   const columns = [
     { label: 'RECEIVED', color: 'var(--color-blue)', orders: [{ table: 'T3', items: 'Jollof × 2', time: '0:42' }, { table: 'T7', items: 'Burger × 1', time: '1:05' }] },
     { label: 'PREPARING', color: 'var(--color-amber)', orders: [{ table: 'T1', items: 'Steak × 1', time: '8:22' }] },
@@ -95,9 +95,9 @@ const steps = [
   },
   {
     number: '02',
-    title: 'The Kitchen',
-    desc: 'Orders appear on the kitchen display the moment they\'re placed. Staff confirm, prepare, and mark orders ready in one tap. Every order tracked. Nothing missed.',
-    Visual: KitchenMockup,
+    title: 'The Service',
+    desc: 'Orders appear on the service display the moment they\'re placed. Staff confirm, prepare, and mark orders ready in one tap. Every order tracked. Nothing missed.',
+    Visual: ServiceMockup,
   },
   {
     number: '03',

@@ -45,7 +45,7 @@ export default function ContactPage() {
                   Get in Touch
                 </span>
                 <h1 className="font-display text-[var(--color-text)] mb-8 leading-[1.1] uppercase" style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', letterSpacing: '-0.02em' }}>
-                  Ready to <br /><span className="text-[var(--color-accent)]">modernise</span> your kitchen?
+                  Ready to <br /><span className="text-[var(--color-accent)]">modernise</span> your service?
                 </h1>
                 <p className="text-[var(--color-muted)] text-xl leading-relaxed mb-12">
                   Book a 15-minute demo to see how Cevop can help you grow sales and protect your margins.

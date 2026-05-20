@@ -22,7 +22,7 @@ const problems = [
         <line x1="9" y1="21" x2="15" y2="18" />
       </svg>
     ),
-    title: 'Orders get lost between table and kitchen.',
+    title: 'Orders get lost between table and service.',
     desc: 'Verbal orders. Paper tickets. Shouting across a busy floor. Things get missed. Food gets wasted. Guests get frustrated.',
   },
   {

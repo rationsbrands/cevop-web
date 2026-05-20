@@ -45,7 +45,7 @@ export function Footer({ socialData }: { socialData?: any }) {
               </Link>
             </div>
             <p className="text-xs text-[var(--color-muted)] leading-relaxed max-w-[220px]">
-              Restaurant operations platform. QR ordering, live kitchen display, real-time management.
+              Restaurant operations platform. QR ordering, live service display, real-time management.
             </p>
             <p className="text-xs text-[var(--color-muted)] mt-4">
               © {new Date().getFullYear()} Cevop. All rights reserved.

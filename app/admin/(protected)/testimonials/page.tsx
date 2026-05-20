@@ -12,7 +12,7 @@ interface Testimonial {
 }
 
 const DEFAULT_TESTIMONIAL = {
-  quote: "We used to lose orders every Friday night. Now the kitchen sees every order the second it's placed. Service is faster, staff are calmer, and customers actually come back.",
+  quote: "We used to lose orders every Friday night. Now the service sees every order the second it's placed. Service is faster, staff are calmer, and customers actually come back.",
   author_name: 'Restaurant Owner',
   author_title: '',
   author_location: 'Lagos, Nigeria',

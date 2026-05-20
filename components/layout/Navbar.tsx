@@ -19,7 +19,7 @@ export const DEFAULT_NAV_LINKS: NavLink[] = [
     href: '/product',
     items: [
       { label: 'QR Ordering', href: '/product#qr', desc: 'Contactless ordering for tables.' },
-      { label: 'Kitchen Display', href: '/product#kds', desc: 'Digital order management for chefs.' },
+      { label: 'Service Display', href: '/product#kds', desc: 'Digital order management for chefs.' },
       { label: 'Admin Dashboard', href: '/product#admin', desc: 'Real-time sales and staff tracking.' },
     ]
   },

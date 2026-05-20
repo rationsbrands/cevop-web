@@ -28,7 +28,7 @@ const solutions = [
     title: 'Optimize Labor',
     tagline: 'Get more done with the same team.',
     desc: 'Labor is tight. Time is even tighter. Cevop helps your team spend less time on manual work and more time with customers.',
-    features: ['Live Kitchen Display', 'Staff Performance Metrics', 'Shift Scheduling', 'Task Automation'],
+    features: ['Live Service Display', 'Staff Performance Metrics', 'Shift Scheduling', 'Task Automation'],
     color: 'bg-amber-500',
   }
 ]

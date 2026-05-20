@@ -3,7 +3,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection'
 
 export function Testimonial({ testimonial }: { testimonial?: any }) {
   const t = testimonial ?? {
-    quote: "We used to lose orders every Friday night. Now the kitchen sees every order the second it's placed. Service is faster, staff are calmer, and customers actually come back.",
+    quote: "We used to lose orders every Friday night. Now Service is faster, staff are calmer, and customers actually come back.",
     author_name: "Restaurant Owner",
     author_location: "Lagos, Nigeria"
   }

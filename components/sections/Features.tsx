@@ -4,7 +4,7 @@ import { IconQR, IconMonitor, IconBell, IconBranch, IconUsers, IconOffline, Icon
 
 const features = [
   { Icon: IconQR, name: 'QR Digital Menu', desc: 'No app download. Works in any mobile browser, instantly.' },
-  { Icon: IconMonitor, name: 'Live Kitchen Display', desc: 'Orders appear the moment they are placed. Status updates in one tap.' },
+  { Icon: IconMonitor, name: 'Live Service Display', desc: 'Orders appear the moment they are placed. Status updates in one tap.' },
   { Icon: IconBell, name: 'Waiter Call System', desc: 'Customers request attention from the table. Staff respond from their dashboard.' },
   { Icon: IconBranch, name: 'Multi-Branch Control', desc: 'One account manages every location. Each branch fully isolated.' },
   { Icon: IconUsers, name: 'Staff Management', desc: 'Invite, assign roles, and manage your team in minutes.' },

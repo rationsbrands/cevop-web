@@ -15,7 +15,7 @@ const features = [
   { 
     id: 'kds',
     Icon: IconMonitor, 
-    title: 'Kitchen Display', 
+    title: 'Service Display', 
     desc: 'Replace paper tickets with a live digital board. Orders are received, tracked, and fulfilled in real-time.' 
   },
   { 
@@ -50,7 +50,7 @@ export default function ProductPage() {
                 The Platform
               </span>
               <h1 className="font-display text-[var(--color-text)] mb-8 leading-[1.1] uppercase text-center" style={{ fontSize: 'clamp(3rem, 8vw, 5rem)', letterSpacing: '-0.02em' }}>
-                Everything you need <br />to run a <span className="text-[var(--color-accent)]">smarter</span> kitchen.
+                Everything you need <br />to run a <span className="text-[var(--color-accent)]">smarter</span> service.
               </h1>
             </AnimatedSection>
 

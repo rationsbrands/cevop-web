@@ -14,7 +14,7 @@ export const DEFAULT_FAQS = [
   },
   {
     q: 'What happens if the internet goes down?',
-    a: 'The customer app queues orders locally and syncs the moment the connection returns. Kitchen staff are notified as soon as orders arrive. Nothing is lost.',
+    a: 'The customer app queues orders locally and syncs the moment the connection returns. Service staff are notified as soon as orders arrive. Nothing is lost.',
   },
   {
     q: 'Can I manage multiple restaurant locations?',
