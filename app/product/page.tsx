@@ -3,7 +3,7 @@ import React from 'react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AnimatedSection, AnimatedItem } from '@/components/ui/AnimatedSection'
-import { IconQR, IconMonitor, IconBell, IconBranch, IconWhatsApp, IconUsers } from '@/components/icons'
+import { IconQR, IconMonitor, IconBell, IconBranch, IconUsers } from '@/components/icons'
 
 const features = [
   { 
@@ -29,12 +29,6 @@ const features = [
     Icon: IconBell, 
     title: 'Service Requests', 
     desc: 'Let customers call for water, the bill, or a waiter with one tap. Staff get instant dashboard alerts.' 
-  },
-  { 
-    id: 'alerts',
-    Icon: IconWhatsApp, 
-    title: 'Smart Alerts', 
-    desc: 'Get order notifications on WhatsApp. Stay connected even when you are away from the dashboard.' 
   },
   { 
     id: 'team',

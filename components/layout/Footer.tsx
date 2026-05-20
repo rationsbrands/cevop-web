@@ -29,7 +29,6 @@ export function Footer({ socialData }: { socialData?: any }) {
 
   const s = runtimeSocial ?? {
     email: 'hello@cevop.com',
-    whatsapp_number: '',
     linkedin_url: '',
     twitter_url: ''
   }
@@ -98,13 +97,6 @@ export function Footer({ socialData }: { socialData?: any }) {
                   {s.email || 'hello@cevop.com'}
                 </a>
               </li>
-              {s.whatsapp_number && (
-                <li>
-                  <a href={`https://wa.me/${s.whatsapp_number}`} className="text-xs text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors">
-                    WhatsApp
-                  </a>
-                </li>
-              )}
             </ul>
             <div className="mt-6">
               <p className="text-[11px] font-bold tracking-widest uppercase text-[var(--color-muted)] mb-4">Follow</p>

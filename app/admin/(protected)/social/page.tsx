@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 
 const DEFAULT_SOCIAL = {
   email: 'hello@cevop.com',
-  whatsapp_number: '',
   linkedin_url: '',
   twitter_url: '',
 }
@@ -84,11 +83,6 @@ export default function SocialEditor() {
           label="Email Address"
           value={data.email}
           onChange={val => setData(prev => ({ ...prev, email: val }))}
-        />
-        <Field
-          label="WhatsApp Number"
-          value={data.whatsapp_number}
-          onChange={val => setData(prev => ({ ...prev, whatsapp_number: val }))}
         />
         <Field
           label="LinkedIn URL"

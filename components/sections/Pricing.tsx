@@ -38,7 +38,6 @@ export const DEFAULT_PLANS: Plan[] = [
       { text: 'QR menus & service display', included: true },
       { text: 'Waiter calls & service requests', included: true },
       { text: 'No credit card required', included: true },
-      { text: 'WhatsApp & Slack notifications', included: false },
     ],
   },
   {
@@ -57,8 +56,6 @@ export const DEFAULT_PLANS: Plan[] = [
       { text: 'Up to 5 staff accounts', included: true },
       { text: 'QR menus & service display', included: true },
       { text: 'Waiter calls & service requests', included: true },
-      { text: 'WhatsApp notifications', included: true },
-      { text: 'Slack notifications', included: false },
     ],
   },
   {
@@ -76,7 +73,6 @@ export const DEFAULT_PLANS: Plan[] = [
       { text: 'Up to 100 tables across all branches', included: true },
       { text: 'Unlimited staff accounts', included: true },
       { text: 'Multi-branch dashboard', included: true },
-      { text: 'WhatsApp + Slack notifications', included: true },
       { text: 'Priority support', included: true },
     ],
   },

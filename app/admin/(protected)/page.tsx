@@ -5,7 +5,7 @@ const SECTIONS = [
   { label: 'Pricing', href: '/admin/pricing', desc: 'Plans, prices, features' },
   { label: 'FAQ', href: '/admin/faq', desc: 'Questions and answers' },
   { label: 'Testimonials', href: '/admin/testimonials', desc: 'Customer quotes' },
-  { label: 'Social & Contact', href: '/admin/social', desc: 'Email, WhatsApp, social links' },
+  { label: 'Social & Contact', href: '/admin/social', desc: 'Email, social links' },
   { label: 'Navigation', href: '/admin/navigation', desc: 'Blog URL and nav links' },
   { label: 'Blog', href: '/admin/blog', desc: 'Posts, drafts, publishing' },
 ]

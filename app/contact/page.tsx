@@ -57,11 +57,6 @@ export default function ContactPage() {
                     <a href="mailto:hello@cevop.com" className="text-2xl font-medium text-[var(--color-accent)] hover:opacity-70 transition-all">hello@cevop.com</a>
                   </div>
                   <div>
-                    <p className="text-[var(--color-text)] font-bold text-sm uppercase mb-2 tracking-widest">Chat with Sales</p>
-                    {/* TODO: Replace with real WhatsApp business number */}
-                    <a href="https://wa.me/WHATSAPP_NUMBER_PLACEHOLDER" className="text-2xl font-medium text-[var(--color-text)] hover:opacity-70 transition-all">WhatsApp Messenger</a>
-                  </div>
-                  <div>
                     <p className="text-[var(--color-text)] font-bold text-sm uppercase mb-2 tracking-widest">Global Support</p>
                     <p className="text-lg text-[var(--color-muted)]">Available 24/7 for all active branches.</p>
                   </div>
