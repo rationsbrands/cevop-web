@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Dark mode (default) ────────────────────────────────── */
+:root {
+  --color-bg:         #000000;
+  --color-surface:    #0A0A0A;
+  --color-surface2:   #0F1111;
+  --color-border:     #1A2020;
+  --color-accent:     #00B3A6;
+  --color-accent-dim: rgba(0, 179, 166, 0.10);
+  --color-text:       #FFFFFF;
+  --color-muted:      #6B8080;
+  --color-green:      #22C55E;
+  --color-amber:      #FFA51F;
+  --color-red:        #EF4444;
+  --color-blue:       #3B82F6;
+}
+
+/* ── Light mode ──────────────────────────────────────────── */
+.light {
+  --color-bg:         #FFFFFF;
+  --color-surface:    #F8F9FA;
+  --color-surface2:   #F1F3F5;
+  --color-border:     #DEE2E6;
+  --color-accent:     #00B3A6;
+  --color-accent-dim: rgba(0, 179, 166, 0.08);
+  --color-text:       #000000;
+  --color-muted:      #495057;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-rethink), system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.font-display { 
+  font-family: var(--font-rethink), system-ui, sans-serif; 
+  font-weight: 800;
+}
+.font-serif { font-family: var(--font-stix), serif; }
+.font-mono { font-family: var(--font-fragment), monospace; }
+
+::selection { background: var(--color-accent); color: #000; }
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+@keyframes scan {
+  0% { top: 8%; opacity: 0; }
+  5% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { top: 90%; opacity: 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+.scan-line { animation: scan 2.8s ease-in-out infinite; }
+.animate-float { animation: float 4s ease-in-out infinite; }
