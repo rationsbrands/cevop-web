@@ -211,7 +211,7 @@ export function Hero({ data }: { data?: HeroData | null }) {
     show_secondary_cta: true,
     cta_secondary_text: 'See How It Works',
     cta_secondary_href: '#how-it-works',
-    footnote: 'Free forever · No credit card required · Live in 10 minutes',
+    footnote: 'Free · No credit card required · Live in 10 minutes',
   }
   return (
     <section className="relative min-h-screen flex items-center pt-14 overflow-hidden">

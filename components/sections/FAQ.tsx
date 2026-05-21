@@ -6,7 +6,7 @@ import { AnimatedSection } from '@/components/ui/AnimatedSection'
 export const DEFAULT_FAQS = [
   {
     q: 'Is there really a free plan with no time limit?',
-    a: 'Yes. The Cevop free plan is genuinely free forever — no trial period, no credit card, and no hidden expiry. You get 1 branch, up to 5 tables, and 3 staff accounts. If you want to experience the full Growth plan before subscribing, ask us about a 7-day trial.',
+    a: 'Yes. The Cevop free plan is genuinely Free — no trial period, no credit card, and no hidden expiry. You get 1 branch, up to 5 tables, and 3 staff accounts. If you want to experience the full Growth plan before subscribing, ask us about a 7-day trial.',
   },
   {
     q: 'Does the customer need to download an app?',

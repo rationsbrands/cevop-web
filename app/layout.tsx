@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s | Cevop',
   },
   description:
-    'Cevop is the restaurant operations platform built for Nigeria and West Africa. QR ordering, live service display, and real-time management. Free forever — no credit card required.',
+    'Cevop is the restaurant operations platform built for Nigeria and West Africa. QR ordering, live service display, and real-time management. Free — no credit card required.',
   keywords: [
     'restaurant management software',
     'QR ordering system Nigeria',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cevop — restaurant management software',
     description:
-      'QR ordering, live service display, and real-time management for restaurants. Free forever — no credit card required.',
+      'QR ordering, live service display, and real-time management for restaurants. Free — no credit card required.',
     type: 'website',
     siteName: 'Cevop',
     url: 'https://cevop.com',
@@ -74,7 +74,7 @@ export const metadata: Metadata = {
     creator: '@cevop',
     title: 'Cevop — restaurant management software',
     description:
-      'QR ordering, live service display, and real-time management for restaurants. Free forever — no credit card required.',
+      'QR ordering, live service display, and real-time management for restaurants. Free — no credit card required.',
     images: ['/opengraph-image.png'],
   },
   alternates: {
@@ -125,7 +125,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 '@type': 'Offer',
                 price: '0',
                 priceCurrency: 'NGN',
-                description: 'Free forever plan available. No credit card required.',
+                description: 'Free plan available. No credit card required.',
               },
               provider: {
                 '@type': 'Organization',

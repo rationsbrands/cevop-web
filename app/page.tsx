@@ -17,14 +17,14 @@ export const dynamic = 'force-dynamic'
 export const metadata: Metadata = {
   title: 'Cevop - restaurant management software| Free QR Ordering System',
   description:
-    'The #1 restaurant operations platform in Nigeria. QR ordering, live kitchen display, real-time management. Free forever — no app download, no credit card. Live in 10 minutes.',
+    'The #1 restaurant operations platform in Nigeria. QR ordering, live kitchen display, real-time management. Free — no app download, no credit card. Live in 10 minutes.',
   alternates: {
     canonical: 'https://cevop.com',
   },
   openGraph: {
     title: 'Cevop - restaurant management software| Cevop',
     description:
-      'QR ordering, live service display, and real-time management. Free forever plan — no credit card, no app download.',
+      'QR ordering, live service display, and real-time management. Free plan — no credit card, no app download.',
     url: 'https://cevop.com',
   },
 }
@@ -103,7 +103,7 @@ export default async function Home() {
                   name: 'Is there a free plan with no time limit?',
                   acceptedAnswer: {
                     '@type': 'Answer',
-                    text: 'Yes. The Cevop free plan is genuinely free forever — no trial period, no credit card, and no hidden expiry. You get 1 branch, up to 5 tables, and 3 staff accounts.',
+                    text: 'Yes. The Cevop free plan is genuinely Free — no trial period, no credit card, and no hidden expiry. You get 1 branch, up to 5 tables, and 3 staff accounts.',
                   },
                 },
                 {

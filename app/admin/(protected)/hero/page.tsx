@@ -13,7 +13,7 @@ const DEFAULT_HERO = {
   show_secondary_cta: true,
   cta_secondary_text: 'See How It Works',
   cta_secondary_href: '#how-it-works',
-  footnote: 'Free forever · No credit card required · Live in 10 minutes',
+  footnote: 'Free · No credit card required · Live in 10 minutes',
 }
 
 interface FieldProps {
