@@ -94,27 +94,57 @@ export default function SponsorsEditor() {
     setEditingId('new')
   }
 
-  const FormFields = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <input type="text" placeholder="Sponsor Name" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm" />
-        <input type="text" placeholder="Logo Image URL (optional)" value={formData.logo_url} onChange={e => setFormData({ ...formData, logo_url: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm" />
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="text-[10px] uppercase font-bold text-[var(--color-muted)] mb-1 block">Text Style (if no logo)</label>
-          <input type="text" placeholder="e.g. font-bold font-serif" value={formData.font_weight} onChange={e => setFormData({ ...formData, font_weight: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm" />
+  function renderFormFields() {
+    return (
+      <div className="space-y-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="Sponsor Name"
+            value={formData.name}
+            onChange={e => setFormData({ ...formData, name: e.target.value })}
+            className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm"
+          />
+          <input
+            type="text"
+            placeholder="Logo Image URL (optional)"
+            value={formData.logo_url}
+            onChange={e => setFormData({ ...formData, logo_url: e.target.value })}
+            className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm"
+          />
         </div>
-        <div>
-          <label className="text-[10px] uppercase font-bold text-[var(--color-muted)] mb-1 block">Sort Order</label>
-          <input type="number" value={formData.sort_order} onChange={e => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="text-[10px] uppercase font-bold text-[var(--color-muted)] mb-1 block">Text Style (if no logo)</label>
+            <input
+              type="text"
+              placeholder="e.g. font-bold font-serif"
+              value={formData.font_weight}
+              onChange={e => setFormData({ ...formData, font_weight: e.target.value })}
+              className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm"
+            />
+          </div>
+          <div>
+            <label className="text-[10px] uppercase font-bold text-[var(--color-muted)] mb-1 block">Sort Order</label>
+            <input
+              type="number"
+              value={formData.sort_order}
+              onChange={e => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+              className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm"
+            />
+          </div>
         </div>
+        <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
+          <input
+            type="checkbox"
+            checked={formData.is_active}
+            onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
+          />{' '}
+          Active
+        </label>
       </div>
-      <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
-        <input type="checkbox" checked={formData.is_active} onChange={e => setFormData({ ...formData, is_active: e.target.checked })} /> Active
-      </label>
-    </div>
-  )
+    )
+  }
 
   if (!loaded) return <div className="flex justify-center h-64"><p className="text-[var(--color-muted)] text-sm">Loading...</p></div>
 
@@ -140,7 +170,7 @@ export default function SponsorsEditor() {
       <div className="space-y-4">
         {editingId === 'new' && (
           <div className="bg-[var(--color-surface)] border border-[var(--color-accent)] rounded-2xl p-6 space-y-4">
-            <FormFields />
+            {renderFormFields()}
             <div className="flex gap-2 justify-end">
               <button onClick={() => setEditingId(null)} className="px-4 py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">Cancel</button>
               <button onClick={handleSave} disabled={loading} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
@@ -152,7 +182,7 @@ export default function SponsorsEditor() {
           <div key={s.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6">
             {editingId === s.id ? (
               <div className="space-y-4">
-                <FormFields />
+                {renderFormFields()}
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => setEditingId(null)} className="px-4 py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">Cancel</button>
                   <button onClick={handleSave} disabled={loading} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>

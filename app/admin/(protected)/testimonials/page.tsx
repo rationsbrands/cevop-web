@@ -105,26 +105,59 @@ export default function TestimonialsEditor() {
     setEditingId('new')
   }
 
-  const FormFields = () => (
-    <div className="space-y-4">
-      <textarea placeholder="Quote" value={formData.quote} onChange={e => setFormData({ ...formData, quote: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 min-h-[80px] resize-none text-sm" />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <input type="text" placeholder="Author Name" value={formData.author_name} onChange={e => setFormData({ ...formData, author_name: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 text-sm" />
-        <input type="text" placeholder="Author Title" value={formData.author_title} onChange={e => setFormData({ ...formData, author_title: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 text-sm" />
-        <input type="text" placeholder="Author Location" value={formData.author_location} onChange={e => setFormData({ ...formData, author_location: e.target.value })} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 text-sm" />
+  function renderFormFields() {
+    return (
+      <div className="space-y-4">
+        <textarea
+          placeholder="Quote"
+          value={formData.quote}
+          onChange={e => setFormData({ ...formData, quote: e.target.value })}
+          className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 min-h-[80px] resize-none text-sm"
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <input
+            type="text"
+            placeholder="Author Name"
+            value={formData.author_name}
+            onChange={e => setFormData({ ...formData, author_name: e.target.value })}
+            className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 text-sm"
+          />
+          <input
+            type="text"
+            placeholder="Author Title"
+            value={formData.author_title}
+            onChange={e => setFormData({ ...formData, author_title: e.target.value })}
+            className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 text-sm"
+          />
+          <input
+            type="text"
+            placeholder="Author Location"
+            value={formData.author_location}
+            onChange={e => setFormData({ ...formData, author_location: e.target.value })}
+            className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50 text-sm"
+          />
+        </div>
+        <div className="flex gap-6">
+          <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={formData.is_active}
+              onChange={e => setFormData({ ...formData, is_active: e.target.checked })}
+            />
+            Active
+          </label>
+          <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={formData.is_featured}
+              onChange={e => setFormData({ ...formData, is_featured: e.target.checked })}
+            />
+            Featured (Hero)
+          </label>
+        </div>
       </div>
-      <div className="flex gap-6">
-        <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
-          <input type="checkbox" checked={formData.is_active} onChange={e => setFormData({ ...formData, is_active: e.target.checked })} />
-          Active
-        </label>
-        <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
-          <input type="checkbox" checked={formData.is_featured} onChange={e => setFormData({ ...formData, is_featured: e.target.checked })} />
-          Featured (Hero)
-        </label>
-      </div>
-    </div>
-  )
+    )
+  }
 
   if (!loaded) return (
     <div className="flex items-center justify-center h-64">
@@ -161,7 +194,7 @@ export default function TestimonialsEditor() {
       <div className="space-y-4">
         {editingId === 'new' && (
           <div className="bg-[var(--color-surface)] border border-[var(--color-accent)] rounded-2xl p-6 space-y-4">
-            <FormFields />
+            {renderFormFields()}
             <div className="flex gap-2 justify-end">
               <button onClick={() => setEditingId(null)} className="px-4 py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">Cancel</button>
               <button onClick={handleSave} disabled={loading} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
@@ -173,7 +206,7 @@ export default function TestimonialsEditor() {
           <div key={t.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6">
             {editingId === t.id ? (
               <div className="space-y-4">
-                <FormFields />
+                {renderFormFields()}
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => setEditingId(null)} className="px-4 py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">Cancel</button>
                   <button onClick={handleSave} disabled={loading} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
