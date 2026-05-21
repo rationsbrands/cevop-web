@@ -2,8 +2,23 @@ import { getSupabaseClient } from '@/lib/supabase'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 
 export const revalidate = 0
+
+export const metadata: Metadata = {
+  title: 'Blog — Restaurant Operations Insights & Guides',
+  description:
+    'Practical advice, guides, and industry insights for restaurant owners in Nigeria and West Africa. Learn how to grow sales, protect margins, and run tighter operations.',
+  alternates: {
+    canonical: 'https://cevop.com/blog',
+  },
+  openGraph: {
+    title: 'Cevop Blog — Restaurant Operations Insights',
+    description: 'Guides and insights for restaurant owners in Nigeria and West Africa.',
+    url: 'https://cevop.com/blog',
+  },
+}
 
 export default async function BlogIndex() {
   let navData: any = null

@@ -10,8 +10,24 @@ import { Testimonial } from '@/components/sections/Testimonial'
 import { FAQ } from '@/components/sections/FAQ'
 import { FinalCTA } from '@/components/sections/FinalCTA'
 import { getSupabaseClient } from '@/lib/supabase'
+import type { Metadata } from 'next'
 
 export const dynamic = 'force-dynamic'
+
+export const metadata: Metadata = {
+  title: 'Restaurant Management Software Nigeria | Free QR Ordering System',
+  description:
+    'The #1 restaurant operations platform in Nigeria. QR ordering, live kitchen display, real-time management. Free forever — no app download, no credit card. Live in 10 minutes.',
+  alternates: {
+    canonical: 'https://cevop.com',
+  },
+  openGraph: {
+    title: 'Restaurant Management Software Nigeria | Cevop',
+    description:
+      'QR ordering, live service display, and real-time management. Free forever plan — no credit card, no app download.',
+    url: 'https://cevop.com',
+  },
+}
 
 
 export default async function Home() {
@@ -67,6 +83,49 @@ export default async function Home() {
         <Testimonial testimonial={testimonialData} />
         <FAQ faqs={faqData} />
         <FinalCTA email={socialData?.email} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              mainEntity: [
+                {
+                  '@type': 'Question',
+                  name: 'Does the customer need to download an app?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'No. Cevop works in any mobile browser. Customers scan the QR code and are taken directly to the menu — no download, no account, no friction.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Is there a free plan with no time limit?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes. The Cevop free plan is genuinely free forever — no trial period, no credit card, and no hidden expiry. You get 1 branch, up to 5 tables, and 3 staff accounts.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'How long does setup take?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Most restaurants are live within 10 minutes. Create your account, add your menu, generate QR codes, print and place them on tables.',
+                  },
+                },
+                {
+                  '@type': 'Question',
+                  name: 'Can I manage multiple restaurant locations?',
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: 'Yes. The Growth and Enterprise plans support multiple branches, each fully isolated. Your admin dashboard shows all locations.',
+                  },
+                },
+              ],
+            }),
+          }}
+        />
       </main>
       <Footer socialData={socialData} />
     </>

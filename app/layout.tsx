@@ -25,24 +25,63 @@ const fragmentMono = Fragment_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://cevop.com'),
-  title: 'Cevop — Restaurant Operations Platform',
-  description: 'QR ordering, live service display, and real-time management for restaurants. No app download required. Start free for 14 days.',
+  title: {
+    default: 'Cevop — Restaurant Management Software Nigeria',
+    template: '%s | Cevop',
+  },
+  description:
+    'Cevop is the restaurant operations platform built for Nigeria and West Africa. QR ordering, live service display, and real-time management. Free forever — no credit card required.',
+  keywords: [
+    'restaurant management software Nigeria',
+    'QR ordering system Nigeria',
+    'restaurant operations platform',
+    'digital menu QR code',
+    'restaurant POS Nigeria',
+    'restaurant management app Lagos',
+    'QR menu restaurant',
+    'online ordering system restaurant',
+    'restaurant software West Africa',
+    'cevop',
+  ],
+  authors: [{ name: 'Cevop', url: 'https://cevop.com' }],
+  creator: 'Cevop',
+  publisher: 'Cevop',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
+  },
   openGraph: {
-    title: 'Cevop — Restaurant Operations Platform',
-    description: 'QR ordering, live service display, and real-time management for restaurants. No app download required. Start free for 14 days.',
+    title: 'Cevop — Restaurant Management Software Nigeria',
+    description:
+      'QR ordering, live service display, and real-time management for restaurants. Free forever — no credit card required.',
     type: 'website',
     siteName: 'Cevop',
     url: 'https://cevop.com',
-    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'Cevop — Restaurant Operations Platform' }],
+    locale: 'en_NG',
+    images: [
+      {
+        url: '/opengraph-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Cevop — Restaurant Operations Platform',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Cevop — Restaurant Operations Platform',
-    description: 'QR ordering, live service display, and real-time management for restaurants.',
+    site: '@cevop',
+    creator: '@cevop',
+    title: 'Cevop — Restaurant Management Software Nigeria',
+    description:
+      'QR ordering, live service display, and real-time management for restaurants. Free forever — no credit card required.',
     images: ['/opengraph-image.png'],
   },
   alternates: {
     canonical: 'https://cevop.com',
+  },
+  verification: {
+    google: 'REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE',
   },
 }
 
@@ -60,6 +99,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         {children}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'SoftwareApplication',
+              name: 'Cevop',
+              applicationCategory: 'BusinessApplication',
+              operatingSystem: 'Web',
+              url: 'https://cevop.com',
+              description:
+                'Restaurant operations platform. QR ordering, live service display, and real-time management for restaurants in Nigeria and West Africa.',
+              offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'NGN',
+                description: 'Free forever plan available. No credit card required.',
+              },
+              provider: {
+                '@type': 'Organization',
+                name: 'Cevop',
+                url: 'https://cevop.com',
+                email: 'hello@cevop.com',
+                sameAs: ['https://twitter.com/cevop', 'https://linkedin.com/company/cevop'],
+              },
+            }),
+          }}
+        />
       </body>
     </html>
   )

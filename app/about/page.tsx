@@ -6,8 +6,17 @@ import remarkGfm from 'remark-gfm'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'About Us',
-  description: 'Built for the modern restaurant.',
+  title: 'About Cevop — Restaurant Operations Platform Built in Nigeria',
+  description:
+    'Cevop was founded to give restaurant owners in Nigeria and West Africa the same powerful tools that global chains use. Learn about our mission, team, and story.',
+  alternates: {
+    canonical: 'https://cevop.com/about',
+  },
+  openGraph: {
+    title: 'About Cevop — Restaurant Operations Platform',
+    description: 'Built for the modern restaurant in Nigeria and West Africa. Learn about our mission.',
+    url: 'https://cevop.com/about',
+  },
 }
 
 export const revalidate = 60

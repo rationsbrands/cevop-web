@@ -3,6 +3,7 @@ import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import type { Metadata } from 'next'
 
 export const revalidate = 0
 
@@ -17,6 +18,45 @@ function renderMarkdown(content: string) {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2" class="text-[var(--color-accent)] hover:underline">$1</a>')
     .replace(/\n\n/gim, '</p><p class="mb-6 leading-relaxed">')
     .replace(/^> (.*$)/gim, '<blockquote class="border-l-4 border-[var(--color-accent)] pl-4 italic my-6">$1</blockquote>')
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
+  try {
+    const supabase = getSupabaseClient()
+    const { data: post } = await supabase
+      .from('blog_posts')
+      .select('title, excerpt, published_at, slug')
+      .eq('slug', params.slug)
+      .single()
+
+    if (!post) return { title: 'Blog Post | Cevop' }
+
+    return {
+      title: post.title,
+      description: post.excerpt || `Read ${post.title} on the Cevop blog.`,
+      alternates: {
+        canonical: `https://cevop.com/blog/${post.slug}`,
+      },
+      openGraph: {
+        title: `${post.title} | Cevop Blog`,
+        description: post.excerpt || '',
+        url: `https://cevop.com/blog/${post.slug}`,
+        type: 'article',
+        publishedTime: post.published_at,
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${post.title} | Cevop Blog`,
+        description: post.excerpt || '',
+      },
+    }
+  } catch {
+    return { title: 'Blog Post | Cevop' }
+  }
 }
 
 export default async function BlogPost({ params }: { params: { slug: string } }) {
@@ -56,6 +96,27 @@ export default async function BlogPost({ params }: { params: { slug: string } })
       <main className="min-h-screen pt-32 pb-24 px-4 bg-[var(--color-bg)]">
         <div className="max-w-3xl mx-auto">
           <Link href="/blog" className="text-sm font-bold text-[var(--color-accent)] hover:underline mb-8 inline-block">&larr; Back to Blog</Link>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'Article',
+                headline: post.title,
+                description: post.excerpt || '',
+                datePublished: post.published_at,
+                publisher: {
+                  '@type': 'Organization',
+                  name: 'Cevop',
+                  url: 'https://cevop.com',
+                },
+                mainEntityOfPage: {
+                  '@type': 'WebPage',
+                  '@id': `https://cevop.com/blog/${post.slug}`,
+                },
+              }),
+            }}
+          />
           
           <article>
             <header className="mb-12 pb-12 border-b border-[var(--color-border)]">
