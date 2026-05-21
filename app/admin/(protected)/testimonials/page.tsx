@@ -27,14 +27,20 @@ export default function TestimonialsEditor() {
   const [loading, setLoading] = useState(false)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => { loadTestimonials() }, [])
 
   async function loadTestimonials() {
     try {
       const res = await fetch('/api/admin/testimonials')
-      const { data } = await res.json()
-      if (data) setTestimonials(data)
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setSaveError(json.error || 'Failed')
+      } else {
+        setSaveError('')
+        if (json.data) setTestimonials(json.data)
+      }
     } catch {}
     setLoaded(true)
   }
@@ -56,8 +62,10 @@ export default function TestimonialsEditor() {
       })
     }
     if (!res.ok) {
-      alert('Failed to save testimonial. Please try again.')
+      const responseJson = await res.json().catch(() => ({}))
+      setSaveError(responseJson.error || 'Failed')
     } else {
+      setSaveError('')
       setEditingId(null)
     }
     await loadTestimonials()
@@ -71,7 +79,12 @@ export default function TestimonialsEditor() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(DEFAULT_TESTIMONIAL),
     })
-    if (!res.ok) alert('Failed to publish default testimonial.')
+    if (!res.ok) {
+      const responseJson = await res.json().catch(() => ({}))
+      setSaveError(responseJson.error || 'Failed')
+    } else {
+      setSaveError('')
+    }
     await loadTestimonials()
     setSeeding(false)
   }
@@ -128,6 +141,7 @@ export default function TestimonialsEditor() {
         </div>
         <button onClick={startNew} className="bg-[var(--color-accent)] text-black font-bold px-6 py-2.5 rounded-xl text-sm">Add Testimonial</button>
       </div>
+      {saveError && <p className="text-red-500 text-sm mb-4">{saveError}</p>}
 
       {testimonials.length === 0 && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-6 flex items-center justify-between gap-6">

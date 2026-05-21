@@ -16,13 +16,19 @@ export default function BlogEditor() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({ title: '', slug: '', excerpt: '', content: '', is_published: false })
   const [loading, setLoading] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => { loadPosts() }, [])
 
   async function loadPosts() {
     const res = await fetch('/api/admin/blog')
-    const { data } = await res.json()
-    if (data) setPosts(data)
+    const json = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      setSaveError(json.error || 'Failed')
+      return
+    }
+    setSaveError('')
+    if (json.data) setPosts(json.data)
   }
 
   async function handleSave() {
@@ -33,10 +39,23 @@ export default function BlogEditor() {
     }
 
     if (editingId === 'new') {
-      await fetch('/api/admin/blog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const res = await fetch('/api/admin/blog', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      if (!res.ok) {
+        const responseJson = await res.json().catch(() => ({}))
+        setSaveError(responseJson.error || 'Failed')
+        setLoading(false)
+        return
+      }
     } else {
-      await fetch(`/api/admin/blog/${editingId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const res = await fetch(`/api/admin/blog/${editingId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      if (!res.ok) {
+        const responseJson = await res.json().catch(() => ({}))
+        setSaveError(responseJson.error || 'Failed')
+        setLoading(false)
+        return
+      }
     }
+    setSaveError('')
     await loadPosts()
     setEditingId(null)
     setLoading(false)
@@ -73,6 +92,7 @@ export default function BlogEditor() {
           <button onClick={startNew} className="bg-[var(--color-accent)] text-black font-bold px-6 py-2.5 rounded-xl text-sm">New Post</button>
         )}
       </div>
+      {saveError && <p className="text-red-500 text-sm mb-4">{saveError}</p>}
 
       {editingId !== null ? (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4">

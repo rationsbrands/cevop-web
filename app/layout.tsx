@@ -26,13 +26,13 @@ const fragmentMono = Fragment_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://cevop.com'),
   title: {
-    default: 'Cevop — Restaurant Management Software Nigeria',
+    default: 'Cevop — restaurant management software',
     template: '%s | Cevop',
   },
   description:
     'Cevop is the restaurant operations platform built for Nigeria and West Africa. QR ordering, live service display, and real-time management. Free forever — no credit card required.',
   keywords: [
-    'restaurant management software Nigeria',
+    'restaurant management software',
     'QR ordering system Nigeria',
     'restaurant operations platform',
     'digital menu QR code',
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   openGraph: {
-    title: 'Cevop — Restaurant Management Software Nigeria',
+    title: 'Cevop — restaurant management software',
     description:
       'QR ordering, live service display, and real-time management for restaurants. Free forever — no credit card required.',
     type: 'website',
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@cevop',
     creator: '@cevop',
-    title: 'Cevop — Restaurant Management Software Nigeria',
+    title: 'Cevop — restaurant management software',
     description:
       'QR ordering, live service display, and real-time management for restaurants. Free forever — no credit card required.',
     images: ['/opengraph-image.png'],
@@ -92,10 +92,20 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ''
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || ''
+
   return (
     <html lang="en" className={`dark ${rethinkSans.variable} ${stixTwoText.variable} ${fragmentMono.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.__CEVOP_SUPABASE_URL=${JSON.stringify(supabaseUrl)};window.__CEVOP_SUPABASE_ANON_KEY=${JSON.stringify(
+              supabaseAnonKey
+            )};`,
+          }}
+        />
       </head>
       <body>
         {children}

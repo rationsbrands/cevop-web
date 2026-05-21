@@ -10,9 +10,13 @@ export default function ResetPasswordPage() {
   const [success, setSuccess] = useState(false)
   const router = useRouter()
 
+  const supabaseUrl =
+    process.env.NEXT_PUBLIC_SUPABASE_URL || (globalThis as any).__CEVOP_SUPABASE_URL
+  const supabaseAnonKey =
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (globalThis as any).__CEVOP_SUPABASE_ANON_KEY
   const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    supabaseUrl as string,
+    supabaseAnonKey as string
   )
 
   useEffect(() => {

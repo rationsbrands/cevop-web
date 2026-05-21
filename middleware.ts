@@ -6,9 +6,31 @@ export async function middleware(request: NextRequest) {
     request,
   })
 
+  const { pathname } = request.nextUrl
+
+  const isAdminRoute = pathname.startsWith('/admin') || pathname.startsWith('/api/admin')
+  const isAdminAuthPage =
+    pathname.startsWith('/admin/login') ||
+    pathname.startsWith('/admin/forgot-password') ||
+    pathname.startsWith('/admin/reset-password')
+
+  const supabaseUrl = (process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || '').trim().split(/\s+/)[0]
+  const supabaseAnonKey = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '').trim().split(/\s+/)[0]
+  if (!supabaseUrl || !supabaseAnonKey) {
+    if (isAdminRoute && !isAdminAuthPage) {
+      if (pathname.startsWith('/api/')) {
+        return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 })
+      }
+      const url = request.nextUrl.clone()
+      url.pathname = '/admin/login'
+      return NextResponse.redirect(url)
+    }
+    return supabaseResponse
+  }
+
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl,
+    supabaseAnonKey,
     {
       cookies: {
         getAll() {
@@ -27,16 +49,10 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { pathname } = request.nextUrl
-
   // Only protect /admin and /api/admin routes, but allow auth pages
-  const isAdminRoute = pathname.startsWith('/admin') || pathname.startsWith('/api/admin')
-  
   if (
     isAdminRoute &&
-    !pathname.startsWith('/admin/login') &&
-    !pathname.startsWith('/admin/forgot-password') &&
-    !pathname.startsWith('/admin/reset-password')
+    !isAdminAuthPage
   ) {
     const { data: { user } } = await supabase.auth.getUser()
 

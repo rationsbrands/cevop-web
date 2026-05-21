@@ -4,6 +4,11 @@
 -- ─────────────────────────────────────────────────────────────
 
 -- Grant table permissions
+grant all on table site_content to anon, authenticated, service_role;
+grant all on table pricing_plans to anon, authenticated, service_role;
+grant all on table faqs to anon, authenticated, service_role;
+grant all on table testimonials to anon, authenticated, service_role;
+grant all on table blog_posts to anon, authenticated, service_role;
 grant all on table sponsors to anon, authenticated, service_role;
 grant all on table pages to anon, authenticated, service_role;
 

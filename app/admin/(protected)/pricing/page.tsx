@@ -22,14 +22,20 @@ export default function PricingEditor() {
   const [loading, setLoading] = useState<string | null>(null)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => { loadPlans() }, [])
 
   async function loadPlans() {
     try {
       const res = await fetch('/api/admin/pricing')
-      const { data } = await res.json()
-      if (data) setPlans(data)
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setSaveError(json.error || 'Failed')
+      } else {
+        setSaveError('')
+        if (json.data) setPlans(json.data)
+      }
     } catch {}
     setLoaded(true)
   }
@@ -42,7 +48,10 @@ export default function PricingEditor() {
       body: JSON.stringify(plan),
     })
     if (!res.ok) {
-      alert('Failed to save plan. Please try again.')
+      const responseJson = await res.json().catch(() => ({}))
+      setSaveError(responseJson.error || 'Failed')
+    } else {
+      setSaveError('')
     }
     await loadPlans()
     setLoading(null)
@@ -50,7 +59,7 @@ export default function PricingEditor() {
 
   async function seedDefaultPlans() {
     setSeeding(true)
-    let failed = false
+    let firstError = ''
     for (let i = 0; i < DEFAULT_PLANS.length; i++) {
       const p = DEFAULT_PLANS[i]
       const res = await fetch('/api/admin/pricing', {
@@ -70,9 +79,13 @@ export default function PricingEditor() {
           sort_order: i,
         }),
       })
-      if (!res.ok) failed = true
+      if (!res.ok && !firstError) {
+        const responseJson = await res.json().catch(() => ({}))
+        firstError = responseJson.error || 'Failed'
+      }
     }
-    if (failed) alert('Some default plans failed to publish.')
+    if (firstError) setSaveError(firstError)
+    else setSaveError('')
     await loadPlans()
     setSeeding(false)
   }
@@ -102,6 +115,7 @@ export default function PricingEditor() {
           <p className="text-xs text-[var(--color-muted)] mt-1">Manage plans and features</p>
         </div>
       </div>
+      {saveError && <p className="text-red-500 text-sm mb-4">{saveError}</p>}
 
       {plans.length === 0 && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-6 flex items-center justify-between gap-6">

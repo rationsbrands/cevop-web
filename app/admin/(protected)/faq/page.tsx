@@ -16,14 +16,20 @@ export default function FAQEditor() {
   const [loading, setLoading] = useState(false)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => { loadFaqs() }, [])
 
   async function loadFaqs() {
     try {
       const res = await fetch('/api/admin/faqs')
-      const { data } = await res.json()
-      if (data) setFaqs(data)
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setSaveError(json.error || 'Failed')
+      } else {
+        setSaveError('')
+        if (json.data) setFaqs(json.data)
+      }
     } catch {}
     setLoaded(true)
   }
@@ -45,8 +51,10 @@ export default function FAQEditor() {
       })
     }
     if (!res.ok) {
-      alert('Failed to save FAQ. Please try again.')
+      const responseJson = await res.json().catch(() => ({}))
+      setSaveError(responseJson.error || 'Failed')
     } else {
+      setSaveError('')
       setEditingId(null)
     }
     await loadFaqs()
@@ -55,7 +63,7 @@ export default function FAQEditor() {
 
   async function seedDefaultFaqs() {
     setSeeding(true)
-    let failed = false
+    let firstError = ''
     for (let i = 0; i < DEFAULT_FAQS.length; i++) {
       const f = DEFAULT_FAQS[i]
       const res = await fetch('/api/admin/faqs', {
@@ -63,9 +71,13 @@ export default function FAQEditor() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: f.q, answer: f.a, sort_order: i }),
       })
-      if (!res.ok) failed = true
+      if (!res.ok && !firstError) {
+        const responseJson = await res.json().catch(() => ({}))
+        firstError = responseJson.error || 'Failed'
+      }
     }
-    if (failed) alert('Some default FAQs failed to publish.')
+    if (firstError) setSaveError(firstError)
+    else setSaveError('')
     await loadFaqs()
     setSeeding(false)
   }
@@ -106,6 +118,7 @@ export default function FAQEditor() {
           Add FAQ
         </button>
       </div>
+      {saveError && <p className="text-red-500 text-sm mb-4">{saveError}</p>}
 
       {faqs.length === 0 && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-6 flex items-center justify-between gap-6">

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 
 const DEFAULT_SOCIAL = {
   email: 'hello@cevop.com',
+  whatsapp_number: '',
   linkedin_url: '',
   twitter_url: '',
 }
@@ -32,12 +33,26 @@ export default function SocialEditor() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [error, setError] = useState('')
 
   useEffect(() => {
-    fetch('/api/admin/content/social').then(r => r.json()).then(({ data: d }) => {
-      if (d) setData((prev) => ({ ...prev, ...d }))
-      setLoaded(true)
-    }).catch(() => setLoaded(true))
+    ;(async () => {
+      try {
+        const res = await fetch('/api/admin/content/social')
+        const json = await res.json().catch(() => ({}))
+        if (!res.ok) {
+          setError(json.error || 'Failed')
+          setLoaded(true)
+          return
+        }
+        if (json?.data) setData((prev) => ({ ...prev, ...json.data }))
+        setError('')
+      } catch {
+        setError('Failed')
+      } finally {
+        setLoaded(true)
+      }
+    })()
   }, [])
 
   async function handleSave() {
@@ -49,9 +64,11 @@ export default function SocialEditor() {
     })
     setSaving(false)
     if (!res.ok) {
-      alert('Failed to save changes. Please try again.')
+      const responseJson = await res.json().catch(() => ({}))
+      setError(responseJson.error || 'Save failed')
       return
     }
+    setError('')
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
   }
@@ -69,13 +86,16 @@ export default function SocialEditor() {
           <h1 className="font-display text-2xl text-[var(--color-text)] uppercase">Social & Contact</h1>
           <p className="text-xs text-[var(--color-muted)] mt-1">Edit email and social links</p>
         </div>
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-[var(--color-accent)] text-black font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-50"
-        >
-          {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
-        </button>
+        <div className="text-right">
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="bg-[var(--color-accent)] text-black font-bold px-6 py-2.5 rounded-xl text-sm disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
+          </button>
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+        </div>
       </div>
 
       <div className="space-y-5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6">
@@ -83,6 +103,11 @@ export default function SocialEditor() {
           label="Email Address"
           value={data.email}
           onChange={val => setData(prev => ({ ...prev, email: val }))}
+        />
+        <Field
+          label="WhatsApp Number (e.g. 2348012345678 — no + or spaces)"
+          value={data.whatsapp_number}
+          onChange={val => setData(prev => ({ ...prev, whatsapp_number: val }))}
         />
         <Field
           label="LinkedIn URL"
