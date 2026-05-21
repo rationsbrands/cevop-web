@@ -164,10 +164,10 @@ export function Navbar({ navData }: { navData?: any }) {
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled 
             ? 'bg-[var(--color-bg)]/80 backdrop-blur-md border-b border-[var(--color-border)]' 
-            : 'bg-transparent'
+            : 'bg-[var(--color-bg)]/90 backdrop-blur-md border-b border-[var(--color-border)] lg:bg-transparent lg:backdrop-blur-0 lg:border-b-0'
         }`}
       >
-        <div className="max-w-[1400px] mx-auto px-6 h-20 grid grid-cols-3 items-center">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 h-20 grid grid-cols-[auto_1fr_auto] items-center">
           {/* Left: Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2 group shrink-0 py-4">
@@ -186,7 +186,7 @@ export function Navbar({ navData }: { navData?: any }) {
           </div>
 
           {/* Right actions */}
-          <div className="flex items-center justify-end gap-8 h-full">
+          <div className="flex items-center justify-end gap-3 sm:gap-8 h-full">
             <div className="hidden lg:flex items-center gap-8">
               <Link href={loginUrl} className="text-[15px] font-bold text-[var(--color-text)] hover:opacity-70 transition-all">
                 Log In
@@ -217,63 +217,86 @@ export function Navbar({ navData }: { navData?: any }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 z-[60] bg-[var(--color-bg)] flex flex-col p-6"
+            className="fixed inset-0 z-[60] bg-black/60"
+            onClick={() => setMobileOpen(false)}
           >
-            <div className="flex items-center justify-between mb-12">
-              <div className="flex items-center gap-2">
-                <LogoMark size={28} className="text-[var(--color-text)]" />
-                <span className="font-display text-2xl text-[var(--color-text)]">Cevop</span>
-              </div>
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="w-10 h-10 flex items-center justify-center text-[var(--color-text)] border border-[var(--color-border)] rounded-full"
-              >
-                <IconX size={20} />
-              </button>
-            </div>
-
-            <nav className="flex flex-col gap-6 flex-1 overflow-y-auto">
-              {dynamicNavLinks.map((link, i) => (
-                <motion.div
-                  key={link.label}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  className="space-y-4"
+            <motion.aside
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.25 }}
+              className="absolute right-0 top-0 h-full w-[min(420px,85vw)] bg-[var(--color-bg)] border-l border-[var(--color-border)] flex flex-col p-6"
+              onClick={(e) => e.stopPropagation()}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Mobile menu"
+            >
+              <div className="flex items-center justify-between mb-10">
+                <div className="flex items-center gap-2">
+                  <LogoMark size={28} className="text-[var(--color-text)]" />
+                  <span className="font-display text-2xl text-[var(--color-text)]">Cevop</span>
+                </div>
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="w-10 h-10 flex items-center justify-center text-[var(--color-text)] border border-[var(--color-border)] rounded-full"
+                  aria-label="Close menu"
                 >
-                  <Link
-                    href={link.href}
-                    onClick={(e) => handleLinkClick(e, link.href)}
-                    className="flex items-center justify-between font-display text-4xl text-[var(--color-text)] hover:opacity-70 transition-all uppercase"
-                  >
-                    {link.label}
-                  </Link>
-                  {link.items && (
-                    <div className="grid grid-cols-1 gap-3 pl-4 border-l border-[var(--color-border)]">
-                      {link.items.map((item) => (
-                        <Link
-                          key={item.label}
-                          href={item.href}
-                          onClick={(e) => handleLinkClick(e, item.href)}
-                          className="text-lg font-medium text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors"
-                        >
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </motion.div>
-              ))}
-            </nav>
+                  <IconX size={20} />
+                </button>
+              </div>
 
-            <div className="mt-8 space-y-4">
-              <Button href="/contact" variant="primary" size="lg" className="w-full rounded-full" onClick={() => setMobileOpen(false)}>
-                Book A Demo
-              </Button>
-              <Link href={loginUrl} className="block text-center text-[15px] font-bold text-[var(--color-text)] py-4 border border-[var(--color-border)] rounded-full">
-                Log In
-              </Link>
-            </div>
+              <nav className="flex flex-col gap-6 flex-1 overflow-y-auto">
+                {dynamicNavLinks.map((link, i) => (
+                  <motion.div
+                    key={link.label}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.04 }}
+                    className="space-y-4"
+                  >
+                    <Link
+                      href={link.href}
+                      onClick={(e) => handleLinkClick(e, link.href)}
+                      className="flex items-center justify-between font-display text-3xl text-[var(--color-text)] hover:opacity-70 transition-all uppercase"
+                    >
+                      {link.label}
+                    </Link>
+                    {link.items && (
+                      <div className="grid grid-cols-1 gap-3 pl-4 border-l border-[var(--color-border)]">
+                        {link.items.map((item) => (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={(e) => handleLinkClick(e, item.href)}
+                            className="text-lg font-medium text-[var(--color-muted)] hover:text-[var(--color-accent)] transition-colors"
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </nav>
+
+              <div className="mt-8 space-y-4">
+                <Button
+                  href="/contact"
+                  variant="primary"
+                  size="lg"
+                  className="w-full rounded-full"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Book A Demo
+                </Button>
+                <Link
+                  href={loginUrl}
+                  className="block text-center text-[15px] font-bold text-[var(--color-text)] py-4 border border-[var(--color-border)] rounded-full"
+                >
+                  Log In
+                </Link>
+              </div>
+            </motion.aside>
           </motion.div>
         )}
       </AnimatePresence>
