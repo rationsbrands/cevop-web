@@ -151,7 +151,7 @@ export function PricingCards({ plans }: { plans: Plan[] }) {
               className="inline-flex items-center gap-2 bg-[var(--color-surface2)] border border-[var(--color-border)] p-1 rounded-full transition-all duration-150"
             >
               <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs font-bold tracking-wider rounded-full bg-[var(--color-accent)] text-black">
-                {billing === 'annual' ? 'Annual — 1 month free' : 'Monthly'}
+                {billing === 'annual' ? 'Annual' : 'Monthly'}
                 <span className={`text-black/70 transition-transform duration-150 ${billingOpen ? 'rotate-180' : ''}`}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="6 9 12 15 18 9" />
