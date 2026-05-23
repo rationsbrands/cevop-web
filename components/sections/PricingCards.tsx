@@ -183,7 +183,7 @@ export function PricingCards({ plans }: { plans: Plan[] }) {
                           : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
                       }`}
                     >
-                      {b === 'annual' ? 'Annual — 1 month free' : 'Monthly'}
+                      {b === 'annual' ? 'Annual' : 'Monthly'}
                     </button>
                   )
                 })}

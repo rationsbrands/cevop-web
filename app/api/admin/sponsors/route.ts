@@ -1,12 +1,18 @@
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { getSupabaseAdmin } from '@/lib/supabase'
+import { getSupabaseAdmin, getSupabaseClient } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(_req: NextRequest) {
   try {
-    const supabase = getSupabaseAdmin()
+    const supabase = (() => {
+      try {
+        return getSupabaseAdmin()
+      } catch {
+        return getSupabaseClient()
+      }
+    })()
     const { data, error } = await supabase.from('sponsors').select('*').order('sort_order', { ascending: true })
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
     return NextResponse.json({ data })

@@ -28,6 +28,15 @@ create table if not exists pricing_plans (
   created_at     timestamptz not null default now()
 );
 
+-- Additional pricing columns (added after initial schema)
+alter table pricing_plans add column if not exists price_ngn_annual integer;
+alter table pricing_plans add column if not exists price_gbp_annual integer;
+alter table pricing_plans add column if not exists price_usd integer;
+alter table pricing_plans add column if not exists price_usd_annual integer;
+alter table pricing_plans add column if not exists price_africa integer;
+alter table pricing_plans add column if not exists price_africa_annual integer;
+alter table pricing_plans add column if not exists roi_line text;
+
 -- 3. FAQs
 create table if not exists faqs (
   id         uuid primary key default gen_random_uuid(),
@@ -62,6 +71,22 @@ create table if not exists blog_posts (
   created_at   timestamptz not null default now(),
   updated_at   timestamptz not null default now()
 );
+
+-- 6. Sponsors (social proof bar)
+create table if not exists sponsors (
+  id          uuid primary key default gen_random_uuid(),
+  name        text not null,
+  logo_url    text not null default '',
+  font_weight text not null default 'font-bold',
+  is_active   boolean not null default true,
+  sort_order  integer not null default 0,
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists sponsors_active_idx on sponsors(is_active, sort_order);
+
+alter table sponsors enable row level security;
+create policy "Public read sponsors" on sponsors for select using (is_active = true);
 
 create index if not exists blog_posts_slug_idx       on blog_posts(slug);
 create index if not exists blog_posts_published_idx  on blog_posts(is_published, published_at desc);

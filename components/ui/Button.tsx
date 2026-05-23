@@ -41,6 +41,14 @@ export function Button({
   const base = `inline-flex items-center justify-center gap-2 rounded transition-all duration-150 cursor-pointer select-none ${sizeClasses[size]} ${variantClasses[variant]} ${disabled ? 'opacity-40 cursor-not-allowed' : ''} ${className}`
 
   if (href) {
+    const isExternal = href.startsWith('http://') || href.startsWith('https://')
+    if (isExternal) {
+      return (
+        <a href={href} className={base} target="_blank" rel="noopener noreferrer">
+          {children}
+        </a>
+      )
+    }
     return (
       <Link href={href} className={base}>
         {children}

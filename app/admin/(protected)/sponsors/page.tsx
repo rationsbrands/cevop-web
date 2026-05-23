@@ -25,15 +25,23 @@ export default function SponsorsEditor() {
   const [loading, setLoading] = useState(false)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [loadError, setLoadError] = useState('')
 
   useEffect(() => { loadSponsors() }, [])
 
   async function loadSponsors() {
     try {
       const res = await fetch('/api/admin/sponsors')
-      const { data } = await res.json()
-      if (data) setSponsors(data)
-    } catch {}
+      const json = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        setLoadError(json.error || 'Failed to load sponsors')
+      } else {
+        setLoadError('')
+        if (Array.isArray(json.data)) setSponsors(json.data)
+      }
+    } catch {
+      setLoadError('Failed to load sponsors')
+    }
     setLoaded(true)
   }
 
@@ -153,14 +161,16 @@ export default function SponsorsEditor() {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="font-display text-2xl text-[var(--color-text)] uppercase">Sponsors</h1>
-          <p className="text-xs text-[var(--color-muted)] mt-1">Manage the 'Trusted By' social proof banner</p>
+          <p className="text-xs text-[var(--color-muted)] mt-1">Manage the “Trusted By” social proof banner</p>
         </div>
         <button onClick={startNew} className="bg-[var(--color-accent)] text-black font-bold px-6 py-2.5 rounded-xl text-sm">Add Sponsor</button>
       </div>
 
-      {sponsors.length === 0 && (
+      {loadError && <p className="text-red-500 text-sm mb-4">{loadError}</p>}
+
+      {sponsors.length === 0 && !loadError && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-6 flex items-center justify-between gap-6">
-          <p className="text-sm text-[var(--color-muted)]">No sponsors found in the database. The website will show built-in defaults.</p>
+          <p className="text-sm text-[var(--color-muted)]">No sponsors found in the database. Publish default sponsors to seed your initial list.</p>
           <button onClick={seedDefaultSponsors} disabled={seeding} className="bg-[var(--color-accent)] text-black font-bold px-5 py-2.5 rounded-xl text-sm disabled:opacity-50">
             {seeding ? 'Publishing...' : 'Publish Default Sponsors'}
           </button>

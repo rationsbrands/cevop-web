@@ -13,22 +13,23 @@ export interface Plan {
 }
 
 export async function fetchPlans(): Promise<Plan[]> {
+  const isProd = process.env.NODE_ENV === 'production'
   try {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('pricing_plans')
       .select('*')
-      .eq('is_active', true)
       .order('sort_order');
 
-    if (error || !data || data.length === 0) {
-      return getDefaultPlans();
+    if (error) throw error
+    if (!data || data.length === 0) {
+      return isProd ? [] : getDefaultPlans()
     }
 
     // Map Supabase row shape to Plan interface
     // Handles both column naming conventions the admin CMS may use
     return data.map((row: any): Plan => ({
-      id: row.id ?? String(row.name).toLowerCase(),
+      id: String(row.name).toLowerCase(),
       name: row.name,
       description: row.tagline ?? row.description ?? '',
       prices: {

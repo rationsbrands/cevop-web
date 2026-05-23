@@ -93,7 +93,7 @@ export default function ContactPage() {
                     </Button>
                     {status === 'success' && (
                       <p className="text-center text-sm text-[var(--color-accent)] mt-4">
-                        ✓ Message sent! We'll be in touch within one business day.
+                        ✓ Message sent! We’ll be in touch within one business day.
                       </p>
                     )}
                     {status === 'error' && (

@@ -3,6 +3,7 @@ import Link from 'next/link'
 const SECTIONS = [
   { label: 'Hero', href: '/admin/hero', desc: 'Headline, subtext, CTA buttons' },
   { label: 'Pricing', href: '/admin/pricing', desc: 'Plans, prices, features' },
+  { label: 'Customer Stories', href: '/admin/customers', desc: 'Stories page cards' },
   { label: 'FAQ', href: '/admin/faq', desc: 'Questions and answers' },
   { label: 'Testimonials', href: '/admin/testimonials', desc: 'Customer quotes' },
   { label: 'Social & Contact', href: '/admin/social', desc: 'Email, social links' },

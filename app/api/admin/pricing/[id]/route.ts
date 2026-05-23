@@ -21,7 +21,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {  const supabase = getSupabaseAdmin()
+export async function DELETE(_req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const supabase = getSupabaseAdmin()
     const { error } = await supabase.from('pricing_plans').delete().eq('id', params.id)

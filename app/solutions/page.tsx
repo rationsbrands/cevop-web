@@ -48,7 +48,7 @@ export default function SolutionsPage() {
                 Built for how <br /><span className="text-[var(--color-accent)]">restaurants</span> actually work.
               </h1>
               <p className="text-[var(--color-muted)] text-xl max-w-2xl mx-auto leading-relaxed">
-                Whether you're a single bistro or a growing chain, Cevop standardises your operations so growth doesn’t multiply stress.
+                Whether you’re a single bistro or a growing chain, Cevop standardises your operations so growth doesn’t multiply stress.
               </p>
             </AnimatedSection>
 

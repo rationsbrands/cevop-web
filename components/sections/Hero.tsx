@@ -198,7 +198,11 @@ export interface HeroData {
   footnote: string
 }
 
-export function Hero({ data }: { data?: HeroData | null }) {
+export function Hero({ data, allowFallback = false }: { data?: HeroData | null; allowFallback?: boolean }) {
+  const isProd = process.env.NODE_ENV === 'production'
+  const canFallback = !isProd || allowFallback
+  if (!data && !canFallback) return null
+
   const d = data ?? {
     badge: 'The full Cevop system',
     headline_line1: 'Restaurant OS',

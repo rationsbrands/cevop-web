@@ -87,10 +87,17 @@ function FAQItem({ faq, index }: { faq: { q: string; a: string }; index: number 
   )
 }
 
-export function FAQ({ faqs }: { faqs?: any[] }) {
-  const displayFaqs = faqs && faqs.length > 0
-    ? faqs.map(f => ({ q: f.question, a: f.answer }))
-    : DEFAULT_FAQS
+export function FAQ({ faqs, allowFallback = false }: { faqs?: any[]; allowFallback?: boolean }) {
+  const isProd = process.env.NODE_ENV === 'production'
+  const canFallback = !isProd || allowFallback
+  const hasFaqs = Boolean(faqs && faqs.length > 0)
+  const displayFaqs = hasFaqs
+    ? faqs!.map((f) => ({ q: f.question, a: f.answer }))
+    : canFallback
+      ? DEFAULT_FAQS
+      : []
+
+  if (!hasFaqs && !canFallback) return null
 
   return (
     <section id="faq" className="py-24 px-4 bg-[var(--color-surface)]">

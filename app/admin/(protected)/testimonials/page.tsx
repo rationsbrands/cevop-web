@@ -27,6 +27,7 @@ export default function TestimonialsEditor() {
   const [loading, setLoading] = useState(false)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [loadError, setLoadError] = useState('')
   const [saveError, setSaveError] = useState('')
 
   useEffect(() => { loadTestimonials() }, [])
@@ -36,12 +37,14 @@ export default function TestimonialsEditor() {
       const res = await fetch('/api/admin/testimonials')
       const json = await res.json().catch(() => ({}))
       if (!res.ok) {
-        setSaveError(json.error || 'Failed')
+        setLoadError(json.error || 'Failed to load testimonials')
       } else {
-        setSaveError('')
+        setLoadError('')
         if (json.data) setTestimonials(json.data)
       }
-    } catch {}
+    } catch {
+      setLoadError('Failed to load testimonials')
+    }
     setLoaded(true)
   }
 
@@ -174,12 +177,13 @@ export default function TestimonialsEditor() {
         </div>
         <button onClick={startNew} className="bg-[var(--color-accent)] text-black font-bold px-6 py-2.5 rounded-xl text-sm">Add Testimonial</button>
       </div>
+      {loadError && <p className="text-red-500 text-sm mb-4">{loadError}</p>}
       {saveError && <p className="text-red-500 text-sm mb-4">{saveError}</p>}
 
-      {testimonials.length === 0 && (
+      {testimonials.length === 0 && !loadError && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-6 flex items-center justify-between gap-6">
           <p className="text-sm text-[var(--color-muted)]">
-            No testimonials found in the database. The website will show the built-in default testimonial until you publish one.
+            No testimonials found in the database. Publish the default testimonial to seed your initial content.
           </p>
           <button
             onClick={seedDefaultTestimonial}
@@ -214,7 +218,7 @@ export default function TestimonialsEditor() {
               </div>
             ) : (
               <div>
-                <p className="text-sm text-[var(--color-text)] mb-4 italic">"{t.quote}"</p>
+                <p className="text-sm text-[var(--color-text)] mb-4 italic">“{t.quote}”</p>
                 <p className="text-xs text-[var(--color-muted)] font-bold">{t.author_name} — {t.author_title}, {t.author_location}</p>
                 <div className="flex gap-4 mt-4">
                   <span className={`text-xs ${t.is_active ? 'text-green-500' : 'text-red-500'}`}>{t.is_active ? 'Active' : 'Inactive'}</span>

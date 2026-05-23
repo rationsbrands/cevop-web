@@ -27,11 +27,12 @@ export function Footer({ socialData }: { socialData?: any }) {
     }
   }, [socialData])
 
-  const s = runtimeSocial ?? {
+  const isProd = process.env.NODE_ENV === 'production'
+  const s = runtimeSocial ?? (isProd ? {} : {
     email: 'hello@cevop.com',
     linkedin_url: '',
-    twitter_url: ''
-  }
+    twitter_url: '',
+  })
   return (
     <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)]">
       <div className="max-w-6xl mx-auto px-4 py-12">

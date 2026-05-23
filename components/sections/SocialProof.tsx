@@ -8,8 +8,12 @@ const CLIENTS = [
   { name: 'Bistro 24', weight: 'font-display tracking-tight' }
 ]
 
-export function SocialProof({ sponsors = [] }: { sponsors?: any[] }) {
-  const displaySponsors = sponsors.length > 0 ? sponsors : CLIENTS;
+export function SocialProof({ sponsors = [], allowFallback = false }: { sponsors?: any[]; allowFallback?: boolean }) {
+  const isProd = process.env.NODE_ENV === 'production'
+  const canFallback = !isProd || allowFallback
+  if (!canFallback && sponsors.length === 0) return null
+
+  const displaySponsors = sponsors.length > 0 ? sponsors : CLIENTS
 
   return (
     <section className="bg-[var(--color-bg)] py-12 px-6">

@@ -1,10 +1,10 @@
-'use client'
 import React from 'react'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
 import { AnimatedSection, AnimatedItem } from '@/components/ui/AnimatedSection'
+import { getSupabaseClient } from '@/lib/supabase'
 
-const stories = [
+const DEFAULT_STORIES = [
   {
     name: 'The Market at Edgewood',
     location: 'Palo Alto, CA',
@@ -34,7 +34,57 @@ const stories = [
   }
 ]
 
-export default function CustomersPage() {
+type CustomerStory = {
+  name: string
+  location: string
+  stat: string
+  statDesc: string
+  quote: string
+  author: string
+  color: string
+}
+
+function normalizeStories(value: any, canFallback: boolean): CustomerStory[] {
+  if (!Array.isArray(value)) return canFallback ? DEFAULT_STORIES : []
+  const cleaned = value
+    .map((s: any) => ({
+      name: typeof s?.name === 'string' ? s.name : '',
+      location: typeof s?.location === 'string' ? s.location : '',
+      stat: typeof s?.stat === 'string' ? s.stat : '',
+      statDesc: typeof s?.statDesc === 'string' ? s.statDesc : '',
+      quote: typeof s?.quote === 'string' ? s.quote : '',
+      author: typeof s?.author === 'string' ? s.author : '',
+      color: typeof s?.color === 'string' ? s.color : 'bg-[var(--color-accent)]',
+    }))
+    .filter((s: CustomerStory) => s.name && s.quote)
+
+  if (cleaned.length > 0) return cleaned
+  return canFallback ? DEFAULT_STORIES : []
+}
+
+export default async function CustomersPage() {
+  const isProd = process.env.NODE_ENV === 'production'
+  let allowFallback = false
+  let stories: CustomerStory[] = []
+  let sponsorNames: string[] = []
+  try {
+    const supabase = getSupabaseClient()
+    const [{ data: storiesRes }, { data: sponsorsRes }] = await Promise.all([
+      supabase.from('site_content').select('value').eq('key', 'customer_stories').maybeSingle(),
+      supabase.from('sponsors').select('name').eq('is_active', true).order('sort_order'),
+    ])
+
+    const canFallback = !isProd || allowFallback
+    stories = normalizeStories(storiesRes?.value, canFallback)
+    sponsorNames = Array.isArray(sponsorsRes) ? sponsorsRes.map((s: any) => String(s.name)).filter(Boolean) : []
+  } catch {
+    allowFallback = true
+  }
+
+  const canFallback = !isProd || allowFallback
+  if (stories.length === 0 && canFallback) stories = DEFAULT_STORIES
+  if (sponsorNames.length === 0 && canFallback) sponsorNames = ['RATIONS', 'BISTRO 24', 'THE PEARL', 'KASADA', 'NOURISH', 'SAVOR']
+
   return (
     <>
       <Navbar />
@@ -78,14 +128,16 @@ export default function CustomersPage() {
               ))}
             </div>
 
-            <AnimatedSection className="mt-32 text-center">
-              <h2 className="font-display text-4xl text-[var(--color-text)] mb-10 uppercase">Trusted by leading restaurants</h2>
-              <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-12 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-                {['RATIONS', 'BISTRO 24', 'THE PEARL', 'KASADA', 'NOURISH', 'SAVOR'].map((name) => (
-                  <span key={name} className="font-display text-3xl text-[var(--color-text)] tracking-widest uppercase">{name}</span>
-                ))}
-              </div>
-            </AnimatedSection>
+            {sponsorNames.length > 0 && (
+              <AnimatedSection className="mt-32 text-center">
+                <h2 className="font-display text-4xl text-[var(--color-text)] mb-10 uppercase">Trusted by leading restaurants</h2>
+                <div className="flex flex-wrap items-center justify-center gap-x-16 gap-y-12 opacity-30 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+                  {sponsorNames.map((name) => (
+                    <span key={name} className="font-display text-3xl text-[var(--color-text)] tracking-widest uppercase">{name}</span>
+                  ))}
+                </div>
+              </AnimatedSection>
+            )}
           </div>
         </section>
       </main>

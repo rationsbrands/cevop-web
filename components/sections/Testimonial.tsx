@@ -1,11 +1,15 @@
 import React from 'react'
 import { AnimatedSection } from '@/components/ui/AnimatedSection'
 
-export function Testimonial({ testimonial }: { testimonial?: any }) {
+export function Testimonial({ testimonial, allowFallback = false }: { testimonial?: any; allowFallback?: boolean }) {
+  const isProd = process.env.NODE_ENV === 'production'
+  const canFallback = !isProd || allowFallback
+  if (!canFallback && !testimonial) return null
+
   const t = testimonial ?? {
-    quote: "We used to lose orders every Friday night. Now Service is faster, staff are calmer, and customers actually come back.",
-    author_name: "Restaurant Owner",
-    author_location: "Lagos, Nigeria"
+    quote: 'We used to lose orders every Friday night. Now Service is faster, staff are calmer, and customers actually come back.',
+    author_name: 'Restaurant Owner',
+    author_location: 'Lagos, Nigeria',
   }
 
   return (

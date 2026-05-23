@@ -5,6 +5,7 @@ import { PricingCards } from './PricingCards';
 
 export async function Pricing() {
   const plans = await fetchPlans();
+  if (plans.length === 0) return null;
 
   return (
     <section id="pricing" className="py-24 px-4 bg-[var(--color-surface)]">

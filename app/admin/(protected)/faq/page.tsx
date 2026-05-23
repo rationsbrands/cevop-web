@@ -16,6 +16,7 @@ export default function FAQEditor() {
   const [loading, setLoading] = useState(false)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
+  const [loadError, setLoadError] = useState('')
   const [saveError, setSaveError] = useState('')
 
   useEffect(() => { loadFaqs() }, [])
@@ -25,12 +26,14 @@ export default function FAQEditor() {
       const res = await fetch('/api/admin/faqs')
       const json = await res.json().catch(() => ({}))
       if (!res.ok) {
-        setSaveError(json.error || 'Failed')
+        setLoadError(json.error || 'Failed to load FAQs')
       } else {
-        setSaveError('')
+        setLoadError('')
         if (json.data) setFaqs(json.data)
       }
-    } catch {}
+    } catch {
+      setLoadError('Failed to load FAQs')
+    }
     setLoaded(true)
   }
 
@@ -118,12 +121,13 @@ export default function FAQEditor() {
           Add FAQ
         </button>
       </div>
+      {loadError && <p className="text-red-500 text-sm mb-4">{loadError}</p>}
       {saveError && <p className="text-red-500 text-sm mb-4">{saveError}</p>}
 
-      {faqs.length === 0 && (
+      {faqs.length === 0 && !loadError && (
         <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 mb-6 flex items-center justify-between gap-6">
           <p className="text-sm text-[var(--color-muted)]">
-            No FAQs found in the database. The website will show the built-in defaults until you publish FAQs.
+            No FAQs found in the database. Publish default FAQs to seed your initial questions.
           </p>
           <button
             onClick={seedDefaultFaqs}
