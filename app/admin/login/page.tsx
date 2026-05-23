@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 import Link from 'next/link'
@@ -15,9 +15,13 @@ export default function AdminLoginPage() {
     process.env.NEXT_PUBLIC_SUPABASE_URL || (globalThis as any).__CEVOP_SUPABASE_URL
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (globalThis as any).__CEVOP_SUPABASE_ANON_KEY
-  const supabase = createBrowserClient(
-    supabaseUrl as string,
-    supabaseAnonKey as string
+  const supabase = useMemo(
+    () =>
+      createBrowserClient(
+        supabaseUrl as string,
+        supabaseAnonKey as string
+      ),
+    [supabaseUrl, supabaseAnonKey]
   )
 
   async function handleSubmit(e: React.FormEvent) {
@@ -67,7 +71,7 @@ export default function AdminLoginPage() {
               <label className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-muted)] block">
                 Password
               </label>
-              <Link href="/admin/forgot-password" className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-accent)] hover:underline">
+              <Link href="/admin/forgot-password" tabIndex={-1} className="text-[10px] font-bold uppercase tracking-widest text-[var(--color-accent)] hover:underline">
                 Forgot?
               </Link>
             </div>

@@ -20,7 +20,7 @@ export function FinalCTA({ email }: { email?: string }) {
             Cevop standardises your operations so growth doesn&apos;t multiply stress.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
-            <Button href="https://app.cevop.com/signup" variant="primary" size="lg">
+            <Button href="https://app.cevop.com/signup?currency=NGN" variant="primary" size="lg">
               Start Free Trial
             </Button>
             <Button href="/contact" variant="secondary" size="lg">

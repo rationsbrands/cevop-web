@@ -32,6 +32,14 @@ export const DEFAULT_FAQS = [
     q: 'Is my data secure?',
     a: 'Yes. All data is isolated per organisation and per branch at the database level — not just in the UI. Tokens are short-lived, hashed, and rotated on every request. Your data cannot be accessed by other tenants.',
   },
+  {
+    q: 'Do you charge per order or per transaction?',
+    a: 'No. Cevop is a flat monthly subscription. We never charge a percentage of your sales or a fee per order placed.',
+  },
+  {
+    q: 'Can I switch between monthly and annual billing?',
+    a: 'Yes. You can switch to annual at any time and we\'ll prorate the difference. Switching from annual to monthly takes effect at the end of your current billing cycle.',
+  },
 ]
 
 function FAQItem({ faq, index }: { faq: { q: string; a: string }; index: number }) {

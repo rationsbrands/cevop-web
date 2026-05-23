@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { DEFAULT_PLANS } from '@/components/sections/Pricing'
+const DEFAULT_PLANS: any[] = []
 
 interface Feature { text: string; included: boolean }
 interface Plan {

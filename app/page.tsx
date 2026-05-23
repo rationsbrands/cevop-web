@@ -34,7 +34,6 @@ export default async function Home() {
   let heroData: any = null
   let socialData: any = null
   let navData: any = null
-  let pricingData: any[] = []
   let faqData: any[] = []
   let testimonialData: any = null
   let sponsorData: any[] = []
@@ -46,7 +45,6 @@ export default async function Home() {
       { data: heroRes },
       { data: socialRes },
       { data: navRes },
-      { data: pricingRes },
       { data: faqRes },
       { data: testimonialRes },
       { data: sponsorRes },
@@ -54,7 +52,6 @@ export default async function Home() {
       supabase.from('site_content').select('value').eq('key', 'hero'),
       supabase.from('site_content').select('value').eq('key', 'social'),
       supabase.from('site_content').select('value').eq('key', 'nav'),
-      supabase.from('pricing_plans').select('*').order('sort_order'),
       supabase.from('faqs').select('*').order('sort_order'),
       supabase.from('testimonials').select('*').eq('is_featured', true).limit(1),
       supabase.from('sponsors').select('*').eq('is_active', true).order('sort_order'),
@@ -63,7 +60,6 @@ export default async function Home() {
     heroData = heroRes?.[0]?.value ?? null
     socialData = socialRes?.[0]?.value ?? null
     navData = navRes?.[0]?.value ?? null
-    pricingData = pricingRes ?? []
     faqData = faqRes ?? []
     testimonialData = testimonialRes?.[0] ?? null
     sponsorData = sponsorRes ?? []
@@ -79,7 +75,7 @@ export default async function Home() {
         <Problem />
         <HowItWorks />
         <Features />
-        <Pricing plans={pricingData} />
+        <Pricing />
         <Testimonial testimonial={testimonialData} />
         <FAQ faqs={faqData} />
         <FinalCTA email={socialData?.email} />

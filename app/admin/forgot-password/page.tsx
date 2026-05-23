@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import Link from 'next/link'
 
@@ -13,9 +13,13 @@ export default function ForgotPasswordPage() {
     process.env.NEXT_PUBLIC_SUPABASE_URL || (globalThis as any).__CEVOP_SUPABASE_URL
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (globalThis as any).__CEVOP_SUPABASE_ANON_KEY
-  const supabase = createBrowserClient(
-    supabaseUrl as string,
-    supabaseAnonKey as string
+  const supabase = useMemo(
+    () =>
+      createBrowserClient(
+        supabaseUrl as string,
+        supabaseAnonKey as string
+      ),
+    [supabaseUrl, supabaseAnonKey]
   )
 
   async function handleSubmit(e: React.FormEvent) {

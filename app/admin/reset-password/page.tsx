@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createBrowserClient } from '@supabase/ssr'
 
@@ -14,9 +14,13 @@ export default function ResetPasswordPage() {
     process.env.NEXT_PUBLIC_SUPABASE_URL || (globalThis as any).__CEVOP_SUPABASE_URL
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (globalThis as any).__CEVOP_SUPABASE_ANON_KEY
-  const supabase = createBrowserClient(
-    supabaseUrl as string,
-    supabaseAnonKey as string
+  const supabase = useMemo(
+    () =>
+      createBrowserClient(
+        supabaseUrl as string,
+        supabaseAnonKey as string
+      ),
+    [supabaseUrl, supabaseAnonKey]
   )
 
   useEffect(() => {

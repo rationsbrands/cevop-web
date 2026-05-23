@@ -1,13 +1,23 @@
 import type { Metadata, Viewport } from 'next'
-import { Rethink_Sans, STIX_Two_Text, Fragment_Mono } from 'next/font/google'
+import { headers } from 'next/headers'
+import { Rethink_Sans, STIX_Two_Text, Fragment_Mono, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import { getThemeScript } from '@/lib/theme'
+import { getCurrencyFromCountry } from '@/lib/currency'
+import { CurrencyProvider } from '@/context/CurrencyContext'
 
 const rethinkSans = Rethink_Sans({
   subsets: ['latin'],
   display: 'swap',
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-rethink',
+})
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  display: 'swap',
+  variable: '--font-display',
 })
 
 const stixTwoText = STIX_Two_Text({
@@ -30,7 +40,7 @@ export const metadata: Metadata = {
     template: '%s | Cevop',
   },
   description:
-    'Cevop is the restaurant operations platform built for Nigeria and West Africa. QR ordering, live service display, and real-time management. Free — no credit card required.',
+    'Restaurant operations platform. QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download. Live in 10 minutes.',
   keywords: [
     'restaurant management software',
     'QR ordering system Nigeria',
@@ -54,7 +64,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Cevop — restaurant management software',
     description:
-      'QR ordering, live service display, and real-time management for restaurants. Free — no credit card required.',
+      'QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download.',
     type: 'website',
     siteName: 'Cevop',
     url: 'https://cevop.com',
@@ -74,14 +84,14 @@ export const metadata: Metadata = {
     creator: '@cevop',
     title: 'Cevop — restaurant management software',
     description:
-      'QR ordering, live service display, and real-time management for restaurants. Free — no credit card required.',
+      'QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download.',
     images: ['/opengraph-image.png'],
   },
   alternates: {
     canonical: 'https://cevop.com',
   },
   verification: {
-    google: 'REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE',
+    google: 'CcJ9oF8fXxiMXoOPMJh4wLJmT0r96GhLLVBoQUPfhik',
   },
 }
 
@@ -91,12 +101,16 @@ export const viewport: Viewport = {
   themeColor: '#00B3A6',
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL || ''
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || ''
 
+  const headersList = await headers();
+  const country = headersList.get('x-vercel-ip-country');
+  const initialCurrency = getCurrencyFromCountry(country);
+
   return (
-    <html lang="en" className={`dark ${rethinkSans.variable} ${stixTwoText.variable} ${fragmentMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`dark ${rethinkSans.variable} ${stixTwoText.variable} ${fragmentMono.variable} ${plusJakarta.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
         <script
@@ -108,35 +122,37 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        {children}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'SoftwareApplication',
-              name: 'Cevop',
-              applicationCategory: 'BusinessApplication',
-              operatingSystem: 'Web',
-              url: 'https://cevop.com',
-              description:
-                'Restaurant operations platform. QR ordering, live service display, and real-time management for restaurants in Nigeria and West Africa.',
-              offers: {
-                '@type': 'Offer',
-                price: '0',
-                priceCurrency: 'NGN',
-                description: 'Free plan available. No credit card required.',
-              },
-              provider: {
-                '@type': 'Organization',
+        <CurrencyProvider initialCurrency={initialCurrency}>
+          {children}
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
                 name: 'Cevop',
+                applicationCategory: 'BusinessApplication',
+                operatingSystem: 'Web',
                 url: 'https://cevop.com',
-                email: 'hello@cevop.com',
-                sameAs: ['https://twitter.com/cevop', 'https://linkedin.com/company/cevop'],
-              },
-            }),
-          }}
-        />
+                description:
+                  'Restaurant operations platform. QR ordering, live service display, and real-time management for restaurants in Nigeria and West Africa.',
+                offers: {
+                  '@type': 'Offer',
+                  price: '0',
+                  priceCurrency: 'NGN',
+                  description: 'Free plan available. No credit card required.',
+                },
+                provider: {
+                  '@type': 'Organization',
+                  name: 'Cevop',
+                  url: 'https://cevop.com',
+                  email: 'hello@cevop.com',
+                  sameAs: ['https://twitter.com/cevop', 'https://linkedin.com/company/cevop'],
+                },
+              }),
+            }}
+          />
+        </CurrencyProvider>
       </body>
     </html>
   )

@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { createBrowserClient } from '@supabase/ssr'
 import { useRouter } from 'next/navigation'
 
@@ -16,9 +16,13 @@ export default function SettingsPage() {
     process.env.NEXT_PUBLIC_SUPABASE_URL || (globalThis as any).__CEVOP_SUPABASE_URL
   const supabaseAnonKey =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (globalThis as any).__CEVOP_SUPABASE_ANON_KEY
-  const supabase = createBrowserClient(
-    supabaseUrl as string,
-    supabaseAnonKey as string
+  const supabase = useMemo(
+    () =>
+      createBrowserClient(
+        supabaseUrl as string,
+        supabaseAnonKey as string
+      ),
+    [supabaseUrl, supabaseAnonKey]
   )
 
   useEffect(() => {

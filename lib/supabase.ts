@@ -23,6 +23,13 @@ function getSupabaseServiceRoleKeyOptional() {
 
 // Public client — for server components fetching content (read-only)
 export function getSupabaseClient() {
+  if (typeof window !== 'undefined') {
+    const w = window as any
+    if (!w.__CEVOP_SUPABASE_CLIENT__) {
+      w.__CEVOP_SUPABASE_CLIENT__ = createClient(getSupabaseUrl(), getSupabaseAnonKey())
+    }
+    return w.__CEVOP_SUPABASE_CLIENT__
+  }
   return createClient(getSupabaseUrl(), getSupabaseAnonKey())
 }
 

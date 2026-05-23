@@ -13,7 +13,7 @@ const config: Config = {
         sans: ['var(--font-rethink)', 'system-ui', 'sans-serif'],
         serif: ['var(--font-stix)', 'serif'],
         mono: ['var(--font-fragment)', 'monospace'],
-        display: ['var(--font-rethink)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-rethink)', 'system-ui', 'sans-serif'],
       },
       colors: {
         bg: 'var(--color-bg)',

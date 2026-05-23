@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { CurrencyToggle } from '@/components/ui/CurrencyToggle'
 import { IconMenu, IconX, IconChevronDown, LogoMark } from '@/components/icons'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
@@ -188,6 +189,7 @@ export function Navbar({ navData }: { navData?: any }) {
           {/* Right actions */}
           <div className="flex items-center justify-end gap-3 sm:gap-8 h-full">
             <div className="hidden lg:flex items-center gap-8">
+              <CurrencyToggle />
               <Link href={loginUrl} className="text-[15px] font-bold text-[var(--color-text)] hover:opacity-70 transition-all">
                 Log In
               </Link>
@@ -280,6 +282,9 @@ export function Navbar({ navData }: { navData?: any }) {
               </nav>
 
               <div className="mt-8 space-y-4">
+                <div className="flex justify-center pb-2">
+                  <CurrencyToggle />
+                </div>
                 <Button
                   href="/contact"
                   variant="primary"
