@@ -165,7 +165,7 @@ export default function CustomerStoriesEditor() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {stories.map((s, i) => (
-          <div key={`${s.name}-${i}`} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4">
+          <div key={i} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4">
             <div className="flex justify-between items-center pb-4 border-b border-[var(--color-border)]">
               <h3 className="font-bold text-[var(--color-text)] uppercase tracking-wider">Story {i + 1}</h3>
               <button

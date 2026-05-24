@@ -36,7 +36,7 @@ const fragmentMono = Fragment_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://cevop.com'),
   title: {
-    default: 'Cevop — restaurant management software',
+    default: 'Cevop - restaurant management software',
     template: '%s | Cevop',
   },
   description:
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   openGraph: {
-    title: 'Cevop — restaurant management software',
+    title: 'Cevop - restaurant management software',
     description:
       'QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download.',
     type: 'website',
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@cevop',
     creator: '@cevop',
-    title: 'Cevop — restaurant management software',
+    title: 'Cevop - restaurant management software',
     description:
       'QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download.',
     images: ['/opengraph-image.png'],

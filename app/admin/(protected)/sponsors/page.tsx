@@ -23,6 +23,8 @@ export default function SponsorsEditor() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({ name: '', logo_url: '', font_weight: 'font-bold', is_active: true, sort_order: 0 })
   const [loading, setLoading] = useState(false)
+  const [reordering, setReordering] = useState(false)
+  const [draggingId, setDraggingId] = useState<string | null>(null)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [loadError, setLoadError] = useState('')
@@ -74,6 +76,37 @@ export default function SponsorsEditor() {
     if (!confirm('Delete this sponsor?')) return
     await fetch(`/api/admin/sponsors/${id}`, { method: 'DELETE' })
     await loadSponsors()
+  }
+
+  async function persistOrder(nextSponsors: Sponsor[]) {
+    setReordering(true)
+    try {
+      await Promise.all(
+        nextSponsors.map((s, index) =>
+          fetch(`/api/admin/sponsors/${s.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...s, sort_order: index }),
+          })
+        )
+      )
+      await loadSponsors()
+    } finally {
+      setReordering(false)
+    }
+  }
+
+  async function handleDrop(targetId: string) {
+    if (!draggingId || draggingId === targetId) return
+    const from = sponsors.findIndex((s) => s.id === draggingId)
+    const to = sponsors.findIndex((s) => s.id === targetId)
+    if (from < 0 || to < 0) return
+    const next = [...sponsors]
+    const [moved] = next.splice(from, 1)
+    next.splice(to, 0, moved)
+    const nextWithOrder = next.map((s, idx) => ({ ...s, sort_order: idx }))
+    setSponsors(nextWithOrder)
+    await persistOrder(nextWithOrder)
   }
 
   async function seedDefaultSponsors() {
@@ -132,15 +165,6 @@ export default function SponsorsEditor() {
               className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm"
             />
           </div>
-          <div>
-            <label className="text-[10px] uppercase font-bold text-[var(--color-muted)] mb-1 block">Sort Order</label>
-            <input
-              type="number"
-              value={formData.sort_order}
-              onChange={e => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
-              className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] text-sm"
-            />
-          </div>
         </div>
         <label className="flex items-center gap-2 text-sm text-[var(--color-text)]">
           <input
@@ -183,19 +207,34 @@ export default function SponsorsEditor() {
             {renderFormFields()}
             <div className="flex gap-2 justify-end">
               <button onClick={() => setEditingId(null)} className="px-4 py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">Cancel</button>
-              <button onClick={handleSave} disabled={loading} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
+              <button onClick={handleSave} disabled={loading || reordering} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
             </div>
           </div>
         )}
 
         {sponsors.map(s => (
-          <div key={s.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6">
+          <div
+            key={s.id}
+            className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6"
+            draggable={!reordering && editingId === null}
+            onDragStart={() => setDraggingId(s.id)}
+            onDragEnd={() => setDraggingId(null)}
+            onDragOver={(e) => {
+              if (reordering || editingId !== null) return
+              e.preventDefault()
+            }}
+            onDrop={async (e) => {
+              if (reordering || editingId !== null) return
+              e.preventDefault()
+              await handleDrop(s.id)
+            }}
+          >
             {editingId === s.id ? (
               <div className="space-y-4">
                 {renderFormFields()}
                 <div className="flex gap-2 justify-end">
                   <button onClick={() => setEditingId(null)} className="px-4 py-2 text-sm text-[var(--color-muted)] hover:text-[var(--color-text)]">Cancel</button>
-                  <button onClick={handleSave} disabled={loading} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
+                  <button onClick={handleSave} disabled={loading || reordering} className="bg-[var(--color-accent)] text-black px-4 py-2 rounded-lg text-sm font-bold disabled:opacity-50">Save</button>
                 </div>
               </div>
             ) : (
