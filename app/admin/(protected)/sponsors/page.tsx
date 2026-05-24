@@ -10,6 +10,19 @@ interface Sponsor {
   sort_order: number
 }
 
+function GripIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <circle cx="7" cy="6" r="1.2" />
+      <circle cx="13" cy="6" r="1.2" />
+      <circle cx="7" cy="10" r="1.2" />
+      <circle cx="13" cy="10" r="1.2" />
+      <circle cx="7" cy="14" r="1.2" />
+      <circle cx="13" cy="14" r="1.2" />
+    </svg>
+  )
+}
+
 const DEFAULT_SPONSORS = [
   { name: 'Rations', logo_url: '', font_weight: 'font-black' },
   { name: 'DEMO BISTRO', logo_url: '', font_weight: 'font-light tracking-[0.2em]' },
@@ -32,10 +45,7 @@ export default function SponsorsEditor() {
   const touchDragRef = useRef<{
     id: string | null
     active: boolean
-    startX: number
-    startY: number
-    timer: any
-  }>({ id: null, active: false, startX: 0, startY: 0, timer: null })
+  }>({ id: null, active: false })
 
   useEffect(() => { loadSponsors() }, [])
   useEffect(() => {
@@ -115,7 +125,9 @@ export default function SponsorsEditor() {
       const next = [...prev]
       const [moved] = next.splice(from, 1)
       next.splice(to, 0, moved)
-      return next.map((s, idx) => ({ ...s, sort_order: idx }))
+      const withOrder = next.map((s, idx) => ({ ...s, sort_order: idx }))
+      sponsorsRef.current = withOrder
+      return withOrder
     })
   }
 
@@ -131,6 +143,33 @@ export default function SponsorsEditor() {
     const nextWithOrder = next.map((s, idx) => ({ ...s, sort_order: idx }))
     setSponsors(nextWithOrder)
     await persistOrder(nextWithOrder)
+  }
+
+  function startTouchDrag(id: string) {
+    touchDragRef.current.id = id
+    touchDragRef.current.active = true
+    setDraggingId(id)
+  }
+
+  function moveTouchDrag(clientX: number, clientY: number) {
+    const sourceId = touchDragRef.current.id
+    if (!touchDragRef.current.active || !sourceId) return
+    const el = document.elementFromPoint(clientX, clientY) as HTMLElement | null
+    const target = el?.closest?.('[data-sponsor-id]') as HTMLElement | null
+    const targetId = target?.getAttribute('data-sponsor-id')
+    if (!targetId || targetId === sourceId) return
+    reorderByIds(sourceId, targetId)
+  }
+
+  async function endTouchDrag() {
+    const wasActive = touchDragRef.current.active
+    touchDragRef.current.active = false
+    touchDragRef.current.id = null
+    setDraggingId(null)
+    if (!wasActive) return
+    const finalOrder = sponsorsRef.current.map((s, idx) => ({ ...s, sort_order: idx }))
+    setSponsors(finalOrder)
+    await persistOrder(finalOrder)
   }
 
   async function seedDefaultSponsors() {
@@ -253,57 +292,6 @@ export default function SponsorsEditor() {
               e.preventDefault()
               await handleDrop(s.id)
             }}
-            onTouchStart={(e) => {
-              if (reordering || editingId !== null) return
-              const t = e.touches?.[0]
-              if (!t) return
-              setDraggingId(s.id)
-              touchDragRef.current.id = s.id
-              touchDragRef.current.active = false
-              touchDragRef.current.startX = t.clientX
-              touchDragRef.current.startY = t.clientY
-              if (touchDragRef.current.timer) clearTimeout(touchDragRef.current.timer)
-              touchDragRef.current.timer = setTimeout(() => {
-                touchDragRef.current.active = true
-              }, 220)
-            }}
-            onTouchMove={(e) => {
-              if (reordering || editingId !== null) return
-              const sourceId = touchDragRef.current.id
-              const t = e.touches?.[0]
-              if (!sourceId || !t) return
-
-              const dx = Math.abs(t.clientX - touchDragRef.current.startX)
-              const dy = Math.abs(t.clientY - touchDragRef.current.startY)
-              if (!touchDragRef.current.active) {
-                if (dx > 8 || dy > 8) {
-                  if (touchDragRef.current.timer) clearTimeout(touchDragRef.current.timer)
-                  touchDragRef.current.timer = null
-                  touchDragRef.current.id = null
-                  setDraggingId(null)
-                }
-                return
-              }
-
-              e.preventDefault()
-              const el = document.elementFromPoint(t.clientX, t.clientY) as HTMLElement | null
-              const target = el?.closest?.('[data-sponsor-id]') as HTMLElement | null
-              const targetId = target?.getAttribute('data-sponsor-id')
-              if (!targetId || targetId === sourceId) return
-              reorderByIds(sourceId, targetId)
-            }}
-            onTouchEnd={async () => {
-              if (touchDragRef.current.timer) clearTimeout(touchDragRef.current.timer)
-              const wasActive = touchDragRef.current.active
-              touchDragRef.current.timer = null
-              touchDragRef.current.active = false
-              touchDragRef.current.id = null
-              setDraggingId(null)
-              if (!wasActive) return
-              const finalOrder = sponsorsRef.current.map((s, idx) => ({ ...s, sort_order: idx }))
-              setSponsors(finalOrder)
-              await persistOrder(finalOrder)
-            }}
           >
             {editingId === s.id ? (
               <div className="space-y-4">
@@ -315,7 +303,32 @@ export default function SponsorsEditor() {
               </div>
             ) : (
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="flex items-center gap-4 min-w-0">
+                <div className="flex items-center gap-3 min-w-0">
+                  <button
+                    type="button"
+                    aria-label="Drag to reorder"
+                    className="text-[var(--color-muted)] hover:text-[var(--color-text)] select-none"
+                    style={{ touchAction: 'none' }}
+                    onTouchStart={(e) => {
+                      if (reordering || editingId !== null) return
+                      e.preventDefault()
+                      startTouchDrag(s.id)
+                    }}
+                    onTouchMove={(e) => {
+                      if (reordering || editingId !== null) return
+                      const t = e.touches?.[0]
+                      if (!t) return
+                      e.preventDefault()
+                      moveTouchDrag(t.clientX, t.clientY)
+                    }}
+                    onTouchEnd={async (e) => {
+                      if (reordering || editingId !== null) return
+                      e.preventDefault()
+                      await endTouchDrag()
+                    }}
+                  >
+                    <GripIcon />
+                  </button>
                   {s.logo_url ? (
                     <img src={s.logo_url} alt={s.name} className="h-10 object-contain grayscale opacity-60" />
                   ) : (

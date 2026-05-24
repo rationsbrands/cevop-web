@@ -7,6 +7,7 @@ import Link from 'next/link'
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -28,20 +29,30 @@ export default function AdminLoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
-    const { error: signInError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-    
-    if (signInError) {
-      setError(signInError.message)
+
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (signInError) {
+        setError(signInError.message)
+        setLoading(false)
+        return
+      }
+
+      router.push('/admin')
+      router.refresh()
+    } catch (err: any) {
+      const msg = String(err?.message || err || 'Failed to sign in')
+      if (msg.toLowerCase().includes('failed to fetch')) {
+        setError('Auth server unreachable. If you are using local auth, start the gateway on http://localhost:54321.')
+      } else {
+        setError(msg)
+      }
       setLoading(false)
-      return
     }
-    
-    router.push('/admin')
-    router.refresh()
   }
 
   return (
@@ -75,14 +86,24 @@ export default function AdminLoginPage() {
                 Forgot?
               </Link>
             </div>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50"
-              placeholder="Enter password"
-              required
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-xl px-4 py-3 pr-12 text-[var(--color-text)] focus:outline-none focus:border-[var(--color-accent)]/50"
+                placeholder="Enter password"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((v) => !v)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-muted)] hover:text-[var(--color-text)] text-xs font-bold uppercase tracking-widest"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
