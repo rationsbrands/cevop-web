@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 interface Sponsor {
   id: string
@@ -28,8 +28,19 @@ export default function SponsorsEditor() {
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [loadError, setLoadError] = useState('')
+  const sponsorsRef = useRef<Sponsor[]>([])
+  const touchDragRef = useRef<{
+    id: string | null
+    active: boolean
+    startX: number
+    startY: number
+    timer: any
+  }>({ id: null, active: false, startX: 0, startY: 0, timer: null })
 
   useEffect(() => { loadSponsors() }, [])
+  useEffect(() => {
+    sponsorsRef.current = sponsors
+  }, [sponsors])
 
   async function loadSponsors() {
     try {
@@ -96,12 +107,25 @@ export default function SponsorsEditor() {
     }
   }
 
+  function reorderByIds(sourceId: string, targetId: string) {
+    setSponsors((prev) => {
+      const from = prev.findIndex((s) => s.id === sourceId)
+      const to = prev.findIndex((s) => s.id === targetId)
+      if (from < 0 || to < 0 || from === to) return prev
+      const next = [...prev]
+      const [moved] = next.splice(from, 1)
+      next.splice(to, 0, moved)
+      return next.map((s, idx) => ({ ...s, sort_order: idx }))
+    })
+  }
+
   async function handleDrop(targetId: string) {
     if (!draggingId || draggingId === targetId) return
-    const from = sponsors.findIndex((s) => s.id === draggingId)
-    const to = sponsors.findIndex((s) => s.id === targetId)
+    const current = sponsorsRef.current
+    const from = current.findIndex((s) => s.id === draggingId)
+    const to = current.findIndex((s) => s.id === targetId)
     if (from < 0 || to < 0) return
-    const next = [...sponsors]
+    const next = [...current]
     const [moved] = next.splice(from, 1)
     next.splice(to, 0, moved)
     const nextWithOrder = next.map((s, idx) => ({ ...s, sort_order: idx }))
@@ -216,6 +240,7 @@ export default function SponsorsEditor() {
           <div
             key={s.id}
             className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6"
+            data-sponsor-id={s.id}
             draggable={!reordering && editingId === null}
             onDragStart={() => setDraggingId(s.id)}
             onDragEnd={() => setDraggingId(null)}
@@ -228,6 +253,57 @@ export default function SponsorsEditor() {
               e.preventDefault()
               await handleDrop(s.id)
             }}
+            onTouchStart={(e) => {
+              if (reordering || editingId !== null) return
+              const t = e.touches?.[0]
+              if (!t) return
+              setDraggingId(s.id)
+              touchDragRef.current.id = s.id
+              touchDragRef.current.active = false
+              touchDragRef.current.startX = t.clientX
+              touchDragRef.current.startY = t.clientY
+              if (touchDragRef.current.timer) clearTimeout(touchDragRef.current.timer)
+              touchDragRef.current.timer = setTimeout(() => {
+                touchDragRef.current.active = true
+              }, 220)
+            }}
+            onTouchMove={(e) => {
+              if (reordering || editingId !== null) return
+              const sourceId = touchDragRef.current.id
+              const t = e.touches?.[0]
+              if (!sourceId || !t) return
+
+              const dx = Math.abs(t.clientX - touchDragRef.current.startX)
+              const dy = Math.abs(t.clientY - touchDragRef.current.startY)
+              if (!touchDragRef.current.active) {
+                if (dx > 8 || dy > 8) {
+                  if (touchDragRef.current.timer) clearTimeout(touchDragRef.current.timer)
+                  touchDragRef.current.timer = null
+                  touchDragRef.current.id = null
+                  setDraggingId(null)
+                }
+                return
+              }
+
+              e.preventDefault()
+              const el = document.elementFromPoint(t.clientX, t.clientY) as HTMLElement | null
+              const target = el?.closest?.('[data-sponsor-id]') as HTMLElement | null
+              const targetId = target?.getAttribute('data-sponsor-id')
+              if (!targetId || targetId === sourceId) return
+              reorderByIds(sourceId, targetId)
+            }}
+            onTouchEnd={async () => {
+              if (touchDragRef.current.timer) clearTimeout(touchDragRef.current.timer)
+              const wasActive = touchDragRef.current.active
+              touchDragRef.current.timer = null
+              touchDragRef.current.active = false
+              touchDragRef.current.id = null
+              setDraggingId(null)
+              if (!wasActive) return
+              const finalOrder = sponsorsRef.current.map((s, idx) => ({ ...s, sort_order: idx }))
+              setSponsors(finalOrder)
+              await persistOrder(finalOrder)
+            }}
           >
             {editingId === s.id ? (
               <div className="space-y-4">
@@ -238,24 +314,30 @@ export default function SponsorsEditor() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-4 min-w-0">
                   {s.logo_url ? (
                     <img src={s.logo_url} alt={s.name} className="h-10 object-contain grayscale opacity-60" />
                   ) : (
-                    <span className={`text-xl text-[var(--color-text)] ${s.font_weight}`}>{s.name}</span>
+                    <span className={`text-lg text-[var(--color-text)] ${s.font_weight} tracking-normal whitespace-nowrap overflow-hidden text-ellipsis`}>
+                      {s.name}
+                    </span>
                   )}
-                  <div>
-                    <p className="text-sm font-bold text-[var(--color-text)]">{s.name}</p>
-                    <div className="flex gap-4 mt-1">
-                      <span className={`text-xs ${s.is_active ? 'text-green-500' : 'text-red-500'}`}>{s.is_active ? 'Active' : 'Inactive'}</span>
-                      <span className="text-xs text-[var(--color-muted)]">Order: {s.sort_order}</span>
-                    </div>
-                  </div>
+                  {s.logo_url && (
+                    <span className="text-sm font-bold text-[var(--color-text)] whitespace-nowrap overflow-hidden text-ellipsis">
+                      {s.name}
+                    </span>
+                  )}
                 </div>
-                <div className="flex gap-3">
-                  <button onClick={() => startEdit(s)} className="text-xs text-[var(--color-accent)] hover:underline">Edit</button>
-                  <button onClick={() => handleDelete(s.id)} className="text-xs text-red-500 hover:underline">Delete</button>
+
+                <div className="flex items-center justify-between sm:justify-end gap-4">
+                  <div className="flex gap-4">
+                    <span className={`text-xs ${s.is_active ? 'text-green-500' : 'text-red-500'}`}>{s.is_active ? 'Active' : 'Inactive'}</span>
+                  </div>
+                  <div className="flex gap-3">
+                    <button onClick={() => startEdit(s)} className="text-xs text-[var(--color-accent)] hover:underline">Edit</button>
+                    <button onClick={() => handleDelete(s.id)} className="text-xs text-red-500 hover:underline">Delete</button>
+                  </div>
                 </div>
               </div>
             )}

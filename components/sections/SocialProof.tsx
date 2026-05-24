@@ -14,6 +14,8 @@ export function SocialProof({ sponsors = [], allowFallback = false }: { sponsors
   if (!canFallback && sponsors.length === 0) return null
 
   const displaySponsors = sponsors.length > 0 ? sponsors : CLIENTS
+  const useMarquee = displaySponsors.length >= 6
+  const marqueeDurationSeconds = Math.max(18, displaySponsors.length * 4)
 
   return (
     <section className="bg-[var(--color-bg)] py-12 px-6">
@@ -23,20 +25,55 @@ export function SocialProof({ sponsors = [], allowFallback = false }: { sponsors
             Trusted by leading restaurants and cafes across the country
           </h2>
           
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
-            {displaySponsors.map((client, idx) => (
-              <div
-                key={client.name + idx}
-                className={`text-xl lg:text-2xl text-[var(--color-text)] ${client.font_weight || client.weight || ''} whitespace-nowrap flex items-center justify-center`}
-              >
-                {client.logo_url ? (
-                  <img src={client.logo_url} alt={client.name} className="h-8 lg:h-10 w-auto object-contain" />
-                ) : (
-                  client.name
-                )}
+          {useMarquee ? (
+            <div
+              className="cevop-marquee opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500 w-full lg:w-auto"
+              style={{ ['--marquee-duration' as any]: `${marqueeDurationSeconds}s` }}
+            >
+              <div className="cevop-marquee-track flex items-center gap-x-12 gap-y-8">
+                {displaySponsors.map((client, idx) => (
+                  <div
+                    key={`a-${client.name}-${idx}`}
+                    className={`text-xl lg:text-2xl text-[var(--color-text)] ${client.font_weight || client.weight || ''} whitespace-nowrap flex items-center justify-center`}
+                  >
+                    {client.logo_url ? (
+                      <img src={client.logo_url} alt={client.name} className="h-8 lg:h-10 w-auto object-contain" />
+                    ) : (
+                      client.name
+                    )}
+                  </div>
+                ))}
+                {displaySponsors.map((client, idx) => (
+                  <div
+                    key={`b-${client.name}-${idx}`}
+                    aria-hidden="true"
+                    className={`text-xl lg:text-2xl text-[var(--color-text)] ${client.font_weight || client.weight || ''} whitespace-nowrap flex items-center justify-center`}
+                  >
+                    {client.logo_url ? (
+                      <img src={client.logo_url} alt="" className="h-8 lg:h-10 w-auto object-contain" />
+                    ) : (
+                      client.name
+                    )}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-8 opacity-40 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-500">
+              {displaySponsors.map((client, idx) => (
+                <div
+                  key={client.name + idx}
+                  className={`text-xl lg:text-2xl text-[var(--color-text)] ${client.font_weight || client.weight || ''} whitespace-nowrap flex items-center justify-center`}
+                >
+                  {client.logo_url ? (
+                    <img src={client.logo_url} alt={client.name} className="h-8 lg:h-10 w-auto object-contain" />
+                  ) : (
+                    client.name
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

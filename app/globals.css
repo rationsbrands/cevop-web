@@ -78,6 +78,23 @@ body {
 .scan-line { animation: scan 2.8s ease-in-out infinite; }
 .animate-float { animation: float 4s ease-in-out infinite; }
 
+.cevop-marquee { overflow: hidden; }
+.cevop-marquee-track {
+  width: max-content;
+  will-change: transform;
+  animation: cevop-marquee var(--marquee-duration, 28s) linear infinite;
+}
+.cevop-marquee:hover .cevop-marquee-track { animation-play-state: paused; }
+
+@keyframes cevop-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cevop-marquee-track { animation: none; transform: none; }
+}
+
 /* ── Responsive display heading weight ─────────────────── */ 
 @media (max-width: 640px) { 
   .font-display { 
