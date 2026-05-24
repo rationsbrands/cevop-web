@@ -142,6 +142,7 @@ interface Plan {
 export default function PricingEditor() {
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState<string | null>(null)
+  const [deleting, setDeleting] = useState<string | null>(null)
   const [seeding, setSeeding] = useState(false)
   const [loaded, setLoaded] = useState(false)
   const [loadError, setLoadError] = useState('')
@@ -219,6 +220,20 @@ export default function PricingEditor() {
     }
     await loadPlans()
     setLoading(null)
+  }
+
+  async function handleDelete(plan: Plan) {
+    if (!confirm(`Delete "${plan.name}"?`)) return
+    setDeleting(plan.id)
+    const res = await fetch(`/api/admin/pricing/${plan.id}`, { method: 'DELETE' })
+    if (!res.ok) {
+      const responseJson = await res.json().catch(() => ({}))
+      setSaveError(responseJson.error || 'Failed')
+    } else {
+      setSaveError('')
+    }
+    await loadPlans()
+    setDeleting(null)
   }
 
   async function seedDefaultPlans() {
@@ -403,9 +418,18 @@ export default function PricingEditor() {
           <div key={plan.id} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-6 space-y-4">
             <div className="flex justify-between items-center pb-4 border-b border-[var(--color-border)]">
               <h3 className="font-bold text-[var(--color-text)] uppercase tracking-wider">{plan.name}</h3>
-              <button onClick={() => handleSave(plan)} disabled={loading === plan.id} className="bg-[var(--color-accent)] text-black px-4 py-1.5 rounded text-xs font-bold disabled:opacity-50">
-                {loading === plan.id ? 'Saving...' : 'Save Plan'}
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => handleDelete(plan)}
+                  disabled={deleting === plan.id || loading === plan.id}
+                  className="text-xs text-red-500 hover:underline disabled:opacity-50"
+                >
+                  {deleting === plan.id ? 'Deleting...' : 'Delete'}
+                </button>
+                <button onClick={() => handleSave(plan)} disabled={loading === plan.id || deleting === plan.id} className="bg-[var(--color-accent)] text-black px-4 py-1.5 rounded text-xs font-bold disabled:opacity-50">
+                  {loading === plan.id ? 'Saving...' : 'Save Plan'}
+                </button>
+              </div>
             </div>
             
             <div className="space-y-3">
