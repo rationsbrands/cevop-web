@@ -59,7 +59,9 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[var(--color-bg)] px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="font-display text-3xl text-[var(--color-text)] uppercase mb-2">Cevop Admin</h1>
+          <div className="flex justify-center mb-2">
+            <span className="cevop-wordmark" aria-label="Cevop" role="img" />
+          </div>
           <p className="text-sm text-[var(--color-muted)]">Marketing site control panel</p>
         </div>
         <form onSubmit={handleSubmit} className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-8 space-y-4">

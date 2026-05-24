@@ -16,6 +16,8 @@
   --color-amber:      #FFA51F;
   --color-red:        #EF4444;
   --color-blue:       #3B82F6;
+  --brand:            #00b3a6;
+  --text:             #FFFFFF;
 }
 
 /* ── Light mode ──────────────────────────────────────────── */
@@ -28,6 +30,8 @@
   --color-accent-dim: rgba(0, 179, 166, 0.08);
   --color-text:       #000000;
   --color-muted:      #495057;
+  --brand:            #008f84;
+  --text:             #000000;
 }
 
 html {
@@ -93,6 +97,26 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .cevop-marquee-track { animation: none; transform: none; }
+}
+
+.cevop-wordmark {
+  display: inline-block;
+  width: 120px;
+  height: 28px;
+  background-color: var(--text);
+  -webkit-mask-image: url('/11_2048.png');
+  mask-image: url('/11_2048.png');
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+}
+
+[data-theme='dark'] .cevop-wordmark,
+.dark .cevop-wordmark {
+  background-color: var(--brand);
 }
 
 /* ── Responsive display heading weight ─────────────────── */ 

@@ -2,7 +2,6 @@
 import { useEffect, useState } from 'react'
 import React from 'react'
 import Link from 'next/link'
-import { LogoMark } from '@/components/icons'
 import { getSupabaseClient } from '@/lib/supabase'
 
 export function Footer({ socialData }: { socialData?: any }) {
@@ -41,8 +40,7 @@ export function Footer({ socialData }: { socialData?: any }) {
           <div>
             <div className="flex items-center gap-2 mb-6">
               <Link href="/" className="flex items-center gap-2">
-                <LogoMark size={22} className="text-[var(--color-accent)]" />
-                <span className="font-display text-lg text-[var(--color-text)]">Cevop</span>
+                <span className="cevop-wordmark" aria-label="Cevop" role="img" />
               </Link>
             </div>
             <p className="text-xs text-[var(--color-muted)] leading-relaxed max-w-[220px]">

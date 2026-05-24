@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/Button'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { CurrencyToggle } from '@/components/ui/CurrencyToggle'
-import { IconMenu, IconX, IconChevronDown, LogoMark } from '@/components/icons'
+import { IconMenu, IconX, IconChevronDown } from '@/components/icons'
 import { motion, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { getSupabaseClient } from '@/lib/supabase'
@@ -173,8 +173,7 @@ export function Navbar({ navData }: { navData?: any }) {
           {/* Left: Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center gap-2 group shrink-0 py-4">
-              <LogoMark size={28} className="text-[var(--color-text)] group-hover:opacity-80 transition-opacity" />
-              <span className="font-display text-2xl text-[var(--color-text)]">Cevop</span>
+              <span className="cevop-wordmark" aria-label="Cevop" role="img" />
             </Link>
           </div>
 
@@ -236,8 +235,7 @@ export function Navbar({ navData }: { navData?: any }) {
             >
               <div className="flex items-center justify-between mb-10">
                 <div className="flex items-center gap-2">
-                  <LogoMark size={28} className="text-[var(--color-text)]" />
-                  <span className="font-display text-2xl text-[var(--color-text)]">Cevop</span>
+                  <span className="cevop-wordmark" aria-label="Cevop" role="img" />
                 </div>
                 <button
                   onClick={() => setMobileOpen(false)}

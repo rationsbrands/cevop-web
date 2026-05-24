@@ -64,7 +64,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <IconMenu size={18} />
           </button>
           <div className="text-center">
-            <p className="font-display text-sm text-[var(--color-text)] uppercase leading-tight">Cevop</p>
+            <span className="cevop-wordmark" aria-label="Cevop" role="img" />
             <p className="text-[10px] text-[var(--color-muted)] uppercase tracking-widest leading-tight">Admin</p>
           </div>
           <button
@@ -90,7 +90,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           >
             <div className="p-5 border-b border-[var(--color-border)] flex items-center justify-between">
               <div>
-                <p className="font-display text-lg text-[var(--color-text)] uppercase">Cevop</p>
+                <span className="cevop-wordmark" aria-label="Cevop" role="img" />
                 <p className="text-xs text-[var(--color-muted)] mt-0.5">Admin Panel</p>
               </div>
               <button
@@ -130,7 +130,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
 
       <aside className="hidden lg:flex w-56 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-surface)] flex-col">
         <div className="p-6 border-b border-[var(--color-border)]">
-          <p className="font-display text-lg text-[var(--color-text)] uppercase">Cevop</p>
+          <span className="cevop-wordmark" aria-label="Cevop" role="img" />
           <p className="text-xs text-[var(--color-muted)] mt-0.5">Admin Panel</p>
         </div>
         <nav className="flex-1 p-3 space-y-0.5">

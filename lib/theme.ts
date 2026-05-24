@@ -28,6 +28,7 @@ export function applyTheme(theme: Theme) {
     root.classList.add('dark')
     root.classList.remove('light')
   }
+  root.setAttribute('data-theme', resolved)
   
   if (theme === 'system') {
     localStorage.removeItem(STORAGE_KEY)
@@ -47,6 +48,7 @@ export function getThemeScript(): string {
           resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         }
         document.documentElement.classList.add(resolved);
+        document.documentElement.setAttribute('data-theme', resolved);
         if (resolved === 'light') document.documentElement.classList.remove('dark');
         else document.documentElement.classList.remove('light');
       } catch(e) {}

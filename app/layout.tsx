@@ -90,6 +90,16 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://cevop.com',
   },
+  manifest: '/manifest.webmanifest',
+  icons: {
+    icon: [{ url: '/favicon.png' }],
+    apple: [{ url: '/apple-touch-icon.png' }],
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Cevop',
+  },
   verification: {
     google: 'CcJ9oF8fXxiMXoOPMJh4wLJmT0r96GhLLVBoQUPfhik',
   },
@@ -113,6 +123,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" className={`dark ${rethinkSans.variable} ${stixTwoText.variable} ${fragmentMono.variable} ${plusJakarta.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: getThemeScript() }} />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <script
           dangerouslySetInnerHTML={{
             __html: `window.__CEVOP_SUPABASE_URL=${JSON.stringify(supabaseUrl)};window.__CEVOP_SUPABASE_ANON_KEY=${JSON.stringify(
