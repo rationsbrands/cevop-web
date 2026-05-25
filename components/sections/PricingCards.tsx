@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { useCurrency } from '@/context/CurrencyContext';
-import { formatPlanPrice, Plan } from '@/lib/plans';
+import { formatPlanPrice, Plan } from '@/lib/plans'; 
 import { CurrencyToggle } from '../ui/CurrencyToggle';
 import { AnimatedSection, AnimatedItem } from '@/components/ui/AnimatedSection';
 import { Button } from '@/components/ui/Button';
@@ -18,29 +18,47 @@ function CheckIcon() {
 
 type Billing = 'monthly' | 'annual'
 
-function getSavingLine(plan: Plan, currency: ReturnType<typeof useCurrency>['currency'], billing: Billing): string {
-  const monthly = plan.prices[currency].monthly
-  const annual = plan.prices[currency].annual
-  if (monthly === 0 || monthly === null) return ''
-  if (billing === 'annual') return '1 month free'
-  if (annual === null) return ''
-  const saving = Math.round(monthly * 12 - annual * 12)
-  if (!saving || saving <= 0) return ''
-  const sym = currency === 'GBP' ? '£' : currency === 'NGN' ? '₦' : '$'
-  return `Save ${sym}${saving.toLocaleString()}/year on annual`
-}
+function getSavingLines( 
+  plan: Plan, 
+  currency: ReturnType<typeof useCurrency>['currency'], 
+  billing: Billing 
+): { annualMessage: string; monthlySavingMessage: string } { 
+  const monthly = plan.prices[currency].monthly; 
+  const annual  = plan.prices[currency].annual; 
+  if (!monthly || monthly === 0 || annual === null) { 
+    return { annualMessage: '', monthlySavingMessage: '' }; 
+  } 
+  const saving = Math.round(monthly * 12 - annual); 
+  if (saving <= 0) return { annualMessage: '', monthlySavingMessage: '' }; 
+  const sym = 
+    currency === 'NGN' ? '₦' : 
+    currency === 'GBP' ? '£' : 
+    currency === 'EUR' ? '€' : '$'; 
+  return { 
+    annualMessage: '2 months free', 
+    monthlySavingMessage: `Save ${sym}${saving.toLocaleString()}/year on annual`, 
+  }; 
+} 
 
 function PlanCard({ plan, billing, index }: { plan: Plan; billing: Billing; index: number }) {
   const { currency } = useCurrency();
   const priceValue = plan.prices[currency][billing];
   const isFixed = priceValue === null || priceValue === 0;
   const priceString = useMemo(() => formatPlanPrice(priceValue, currency), [currency, priceValue]);
-  const savingLine = useMemo(() => getSavingLine(plan, currency, billing), [plan, currency, billing]);
+  const { annualMessage, monthlySavingMessage } = useMemo( 
+    () => getSavingLines(plan, currency, billing), 
+    [plan, currency, billing] 
+  ); 
 
   const ctaVariant = plan.highlighted ? 'primary' : 'secondary';
-  const ctaLink = plan.id === 'enterprise'
-    ? '/contact'
-    : `https://app.cevop.com/signup?currency=${currency}&plan=${plan.id}&timezone=${currency === 'GBP' ? 'Europe%2FLondon' : 'Africa%2FLagos'}`;
+  const timezoneParam = 
+    currency === 'GBP'    ? 'Europe%2FLondon'     : 
+    currency === 'EUR'    ? 'Europe%2FParis'       : 
+    currency === 'USD'    ? 'America%2FNew_York'   : 
+    'Africa%2FLagos'; 
+  const ctaLink = plan.id === 'enterprise' 
+    ? '/contact' 
+    : `https://app.cevop.com/signup?currency=${currency}&plan=${plan.id}&timezone=${timezoneParam}`; 
 
   return (
     <AnimatedItem index={index}>
@@ -85,9 +103,12 @@ function PlanCard({ plan, billing, index }: { plan: Plan; billing: Billing; inde
               {billing === 'annual' ? 'Billed annually. Cancel anytime.' : 'Billed monthly. Cancel anytime.'}
             </p>
           )}
-          {savingLine && (
-            <p className="text-[10px] text-[var(--color-accent)] mt-1 font-bold">{savingLine}</p>
-          )}
+          {billing === 'annual' && annualMessage && ( 
+            <p className="text-[10px] text-[var(--color-accent)] mt-1 font-bold">{annualMessage}</p> 
+          )} 
+          {billing === 'monthly' && monthlySavingMessage && ( 
+            <p className="text-[10px] text-[var(--color-accent)] mt-1 font-bold">{monthlySavingMessage}</p> 
+          )} 
           {plan.roiLine && (
             <p className="text-[10px] text-[var(--color-muted)] mt-2 leading-relaxed italic">{plan.roiLine}</p>
           )}
@@ -96,7 +117,7 @@ function PlanCard({ plan, billing, index }: { plan: Plan; billing: Billing; inde
         <div className="h-px bg-[var(--color-border)] mb-5" />
 
         <ul className="space-y-2.5 flex-1 mb-6">
-          {plan.features.map((f) => (
+          {plan.features.map((f) => ( 
             <li key={f} className="flex items-start gap-2">
               <span className="text-[var(--color-accent)] shrink-0 mt-0.5">
                 <CheckIcon />

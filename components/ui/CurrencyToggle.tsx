@@ -9,15 +9,16 @@ export function CurrencyToggle() {
   const [open, setOpen] = useState(false)
   const rootRef = useRef<HTMLDivElement | null>(null)
 
-  const options = useMemo<{ value: SupportedCurrency; label: string }[]>(
-    () => [
-      { value: 'NGN', label: '₦ NGN' },
-      { value: 'GBP', label: '£ GBP' },
-      { value: 'USD', label: '$ USD' },
-      { value: 'Africa', label: '$ Africa' },
-    ],
-    []
-  )
+  const options = useMemo<{ value: SupportedCurrency; label: string }[]>( 
+     () => [ 
+       { value: 'NGN',    label: 'NGN'    }, 
+       { value: 'GBP',    label: 'GBP'    }, 
+       { value: 'EUR',    label: 'EUR'    }, 
+       { value: 'USD',    label: 'USD'    }, 
+       { value: 'Africa', label: 'Africa' }, 
+     ], 
+     [] 
+   ) 
   const currentLabel = useMemo(() => options.find((o) => o.value === currency)?.label ?? currency, [currency, options])
 
   useEffect(() => {

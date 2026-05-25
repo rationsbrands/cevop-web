@@ -35,6 +35,8 @@ alter table pricing_plans add column if not exists price_usd integer;
 alter table pricing_plans add column if not exists price_usd_annual integer;
 alter table pricing_plans add column if not exists price_africa integer;
 alter table pricing_plans add column if not exists price_africa_annual integer;
+alter table pricing_plans add column if not exists price_eur integer;
+alter table pricing_plans add column if not exists price_eur_annual integer;
 alter table pricing_plans add column if not exists roi_line text;
 
 -- 3. FAQs

@@ -188,14 +188,19 @@ export function Navbar({ navData }: { navData?: any }) {
 
           {/* Right actions */}
           <div className="flex items-center justify-end gap-3 sm:gap-8 h-full">
-            <div className="hidden lg:flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-6">
               <CurrencyToggle />
-              <Link href={loginUrl} className="text-[15px] font-bold text-[var(--color-text)] hover:opacity-70 transition-all">
-                Log In
-              </Link>
-              <Button href="/contact" variant="primary" size="md" className="rounded-full !px-8 !py-3">
+              <Link href="/contact" className="text-[15px] font-bold text-[var(--color-text)] hover:opacity-70 transition-all">
                 Book A Demo
-              </Button>
+              </Link>
+              <div className="flex items-center gap-2">
+                <Button href={loginUrl} variant="secondary" size="md" className="rounded-full !px-8 !py-3">
+                  Log In
+                </Button>
+                <Button href="https://app.cevop.com/signup" variant="primary" size="md" className="rounded-full !px-8 !py-3">
+                  Sign Up
+                </Button>
+              </div>
             </div>
             <div className="flex items-center h-full">
               <ThemeToggle />
@@ -284,20 +289,32 @@ export function Navbar({ navData }: { navData?: any }) {
                 <div className="flex justify-center pb-2">
                   <CurrencyToggle />
                 </div>
-                <Button
+                <div className="flex flex-col gap-3">
+                  <Button
+                    href={loginUrl}
+                    variant="secondary"
+                    size="lg"
+                    className="w-full rounded-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Log In
+                  </Button>
+                  <Button
+                    href="https://app.cevop.com/signup"
+                    variant="primary"
+                    size="lg"
+                    className="w-full rounded-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign Up
+                  </Button>
+                </div>
+                <Link
                   href="/contact"
-                  variant="primary"
-                  size="lg"
-                  className="w-full rounded-full"
+                  className="block text-center text-[15px] font-bold text-[var(--color-text)] py-4 border border-[var(--color-border)] rounded-full"
                   onClick={() => setMobileOpen(false)}
                 >
                   Book A Demo
-                </Button>
-                <Link
-                  href={loginUrl}
-                  className="block text-center text-[15px] font-bold text-[var(--color-text)] py-4 border border-[var(--color-border)] rounded-full"
-                >
-                  Log In
                 </Link>
               </div>
             </motion.aside>

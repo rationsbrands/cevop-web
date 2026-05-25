@@ -26,7 +26,7 @@ export function CurrencyProvider({
   useEffect(() => {
     try {
       const stored = sessionStorage.getItem('cevop_currency') as SupportedCurrency;
-      if (stored && ['NGN', 'GBP', 'USD', 'Africa'].includes(stored)) {
+      if (stored && ['NGN', 'GBP', 'EUR', 'USD', 'Africa'].includes(stored)) {
         setCurrencyState(stored);
       }
     } catch {

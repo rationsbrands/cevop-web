@@ -13,7 +13,6 @@ export interface Plan {
 }
 
 export async function fetchPlans(): Promise<Plan[]> {
-  const isProd = process.env.NODE_ENV === 'production'
   try {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
@@ -23,7 +22,7 @@ export async function fetchPlans(): Promise<Plan[]> {
 
     if (error) throw error
     if (!data || data.length === 0) {
-      return isProd ? [] : getDefaultPlans()
+      return getDefaultPlans()
     }
 
     // Map Supabase row shape to Plan interface
@@ -32,24 +31,28 @@ export async function fetchPlans(): Promise<Plan[]> {
       id: String(row.name).toLowerCase(),
       name: row.name,
       description: row.tagline ?? row.description ?? '',
-      prices: {
-        NGN: {
-          monthly: row.price_ngn ?? null,
-          annual: row.price_ngn_annual ?? (row.price_ngn ? Math.round(row.price_ngn * 11) : null),
-        },
-        GBP: {
-          monthly: row.price_gbp ?? null,
-          annual: row.price_gbp_annual ?? (row.price_gbp ? Math.round(row.price_gbp * 11) : null),
-        },
-        USD: {
-          monthly: row.price_usd ?? null,
-          annual: row.price_usd_annual ?? (row.price_usd ? Math.round(row.price_usd * 11) : null),
-        },
-        Africa: {
-          monthly: row.price_africa ?? null,
-          annual: row.price_africa_annual ?? (row.price_africa ? Math.round(row.price_africa * 11) : null),
-        },
-      },
+      prices: { 
+        NGN: { 
+          monthly: row.price_ngn ?? null, 
+          annual:  row.price_ngn_annual ?? null, 
+        }, 
+        GBP: { 
+          monthly: row.price_gbp ?? null, 
+          annual:  row.price_gbp_annual ?? null, 
+        }, 
+        EUR: { 
+          monthly: row.price_eur ?? null, 
+          annual:  row.price_eur_annual ?? null, 
+        }, 
+        USD: { 
+          monthly: row.price_usd ?? null, 
+          annual:  row.price_usd_annual ?? null, 
+        }, 
+        Africa: { 
+          monthly: row.price_africa ?? null, 
+          annual:  row.price_africa_annual ?? null, 
+        }, 
+      }, 
       features: Array.isArray(row.features)
         ? row.features.map((f: any) => (typeof f === 'string' ? f : f?.text ?? ''))
         : [],
@@ -64,105 +67,109 @@ export async function fetchPlans(): Promise<Plan[]> {
 
 // Fallback — used if Supabase is unreachable
 // These are the authoritative prices — keep in sync with pricing_plans table
-function getDefaultPlans(): Plan[] {
-  return [
-    {
-      id: 'free',
-      name: 'Free',
-      description: 'Start exploring with no commitment.',
-      prices: {
-        NGN: { monthly: 0, annual: 0 },
-        GBP: { monthly: 0, annual: 0 },
-        USD: { monthly: 0, annual: 0 },
-        Africa: { monthly: 0, annual: 0 },
-      },
-      features: [
-        '1 branch',
-        'Up to 5 tables',
-        'Up to 3 staff accounts',
-        'QR menus & service display',
-        'Waiter calls & service requests',
-        'Live item availability updates',
-        'Basic order flow (RECEIVED to SERVED)',
-        '7-day analytics',
-        'No credit card required',
-      ],
-      cta: 'Start Free',
-      highlighted: false,
-    },
-    {
-      id: 'starter',
-      name: 'Starter',
-      description: 'Everything a single location needs.',
-      prices: {
-        NGN: { monthly: 18000, annual: 16500 },
-        GBP: { monthly: 29, annual: 27 },
-        USD: { monthly: 39, annual: 36 },
-        Africa: { monthly: 15, annual: 14 },
-      },
-      roiLine: 'A 25-table restaurant typically pays this in 2 rounds of missed orders.',
-      features: [
-        '1 branch',
-        'Up to 25 tables',
-        'Up to 10 staff accounts',
-        'QR menus & service display',
-        'Waiter calls, service requests & bill requests',
-        'Floor sections & auto-assignment',
-        '30-day analytics',
-        'Cancel anytime',
-      ],
-      cta: 'Get Started',
-      highlighted: false,
-    },
-    {
-      id: 'growth',
-      name: 'Growth',
-      description: 'For restaurants expanding to multiple sites.',
-      prices: {
-        NGN: { monthly: 45000, annual: 41250 },
-        GBP: { monthly: 79, annual: 72 },
-        USD: { monthly: 99, annual: 91 },
-        Africa: { monthly: 35, annual: 32 },
-      },
-      features: [
-        'Up to 5 branches',
-        'Up to 100 tables across all branches',
-        'Unlimited staff accounts',
-        'Everything in Starter',
-        'Staff rotation & section shuffling',
-        'Multi-branch dashboard',
-        '1-year analytics',
-        'Custom branding',
-        'Priority support',
-        'Cancel anytime',
-      ],
-      cta: 'Get Started',
-      highlighted: true,
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      description: 'Custom deployment for large groups.',
-      prices: {
-        NGN: { monthly: null, annual: null },
-        GBP: { monthly: null, annual: null },
-        USD: { monthly: null, annual: null },
-        Africa: { monthly: null, annual: null },
-      },
-      features: [
-        'Unlimited branches and tables',
-        'Unlimited staff accounts',
-        'Everything in Growth',
-        'API access and integrations',
-        'Custom onboarding and SLA',
-        'Dedicated account manager',
-        'Annual contract',
-      ],
-      cta: 'Contact Us',
-      highlighted: false,
-    },
-  ];
-}
+function getDefaultPlans(): Plan[] { 
+  return [ 
+    { 
+      id: 'free', 
+      name: 'Free', 
+      description: 'Start exploring with no commitment.', 
+      prices: { 
+        NGN:    { monthly: 0, annual: 0 }, 
+        GBP:    { monthly: 0, annual: 0 }, 
+        EUR:    { monthly: 0, annual: 0 }, 
+        USD:    { monthly: 0, annual: 0 }, 
+        Africa: { monthly: 0, annual: 0 }, 
+      }, 
+      features: [ 
+        '1 branch', 
+        'Up to 5 tables', 
+        'Up to 3 staff accounts', 
+        'QR menus & service display', 
+        'Waiter calls & service requests', 
+        'Live item availability updates', 
+        'Basic order flow (RECEIVED to SERVED)', 
+        '7-day analytics', 
+        'No credit card required', 
+      ], 
+      cta: 'Start Free', 
+      highlighted: false, 
+    }, 
+    { 
+      id: 'starter', 
+      name: 'Starter', 
+      description: 'Everything a single location needs.', 
+      prices: { 
+        NGN:    { monthly: 12000, annual: 120000 }, 
+        GBP:    { monthly: 19,    annual: 190    }, 
+        EUR:    { monthly: 22,    annual: 220    }, 
+        USD:    { monthly: 25,    annual: 250    }, 
+        Africa: { monthly: 10,    annual: 100    }, 
+      }, 
+      roiLine: 'A 25-table restaurant typically pays this in 2 rounds of missed orders.', 
+      features: [ 
+        '1 branch', 
+        'Up to 25 tables', 
+        'Up to 10 staff accounts', 
+        'QR menus & service display', 
+        'Waiter calls, service requests & bill requests', 
+        'Floor sections & auto-assignment', 
+        '30-day analytics', 
+        'Cancel anytime', 
+      ], 
+      cta: 'Get Started', 
+      highlighted: false, 
+    }, 
+    { 
+      id: 'growth', 
+      name: 'Growth', 
+      description: 'For restaurants expanding to multiple sites.', 
+      prices: { 
+        NGN:    { monthly: 30000, annual: 300000 }, 
+        GBP:    { monthly: 55,    annual: 550    }, 
+        EUR:    { monthly: 60,    annual: 600    }, 
+        USD:    { monthly: 65,    annual: 650    }, 
+        Africa: { monthly: 25,    annual: 250    }, 
+      }, 
+      features: [ 
+        'Up to 5 branches', 
+        'Up to 100 tables across all branches', 
+        'Unlimited staff accounts', 
+        'Everything in Starter', 
+        'Staff rotation & section shuffling', 
+        'Multi-branch dashboard', 
+        '1-year analytics', 
+        'Custom branding', 
+        'Priority support', 
+        'Cancel anytime', 
+      ], 
+      cta: 'Get Started', 
+      highlighted: true, 
+    }, 
+    { 
+      id: 'enterprise', 
+      name: 'Enterprise', 
+      description: 'Custom deployment for large groups.', 
+      prices: { 
+        NGN:    { monthly: null, annual: null }, 
+        GBP:    { monthly: null, annual: null }, 
+        EUR:    { monthly: null, annual: null }, 
+        USD:    { monthly: null, annual: null }, 
+        Africa: { monthly: null, annual: null }, 
+      }, 
+      features: [ 
+        'Unlimited branches and tables', 
+        'Unlimited staff accounts', 
+        'Everything in Growth', 
+        'API access and integrations', 
+        'Custom onboarding and SLA', 
+        'Dedicated account manager', 
+        'Annual contract', 
+      ], 
+      cta: 'Contact Us', 
+      highlighted: false, 
+    }, 
+  ]; 
+} 
 
 export function formatPlanPrice(value: number | null, currency: SupportedCurrency): string {
   if (value === null) return 'Custom';

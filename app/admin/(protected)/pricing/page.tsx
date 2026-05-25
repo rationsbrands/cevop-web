@@ -8,6 +8,8 @@ const DEFAULT_PLANS = [
     price_ngn_annual: 0,
     price_gbp: 0,
     price_gbp_annual: 0,
+    price_eur: 0,
+    price_eur_annual: 0,
     price_usd: 0,
     price_usd_annual: 0,
     price_africa: 0,
@@ -33,14 +35,16 @@ const DEFAULT_PLANS = [
   {
     name: 'Starter',
     tagline: 'Everything a single location needs.',
-    price_ngn: 18000,
-    price_ngn_annual: 16500,
-    price_gbp: 29,
-    price_gbp_annual: 27,
-    price_usd: 39,
-    price_usd_annual: 36,
-    price_africa: 15,
-    price_africa_annual: 14,
+    price_ngn: 12000,
+    price_ngn_annual: 120000,
+    price_gbp: 19,
+    price_gbp_annual: 190,
+    price_eur: 22,
+    price_eur_annual: 220,
+    price_usd: 25,
+    price_usd_annual: 250,
+    price_africa: 10,
+    price_africa_annual: 100,
     roi_line: 'A 25-table restaurant typically pays this in 2 rounds of missed orders.',
     is_active: true,
     is_popular: false,
@@ -61,14 +65,16 @@ const DEFAULT_PLANS = [
   {
     name: 'Growth',
     tagline: 'For restaurants expanding to multiple sites.',
-    price_ngn: 45000,
-    price_ngn_annual: 41250,
-    price_gbp: 79,
-    price_gbp_annual: 72,
-    price_usd: 99,
-    price_usd_annual: 91,
-    price_africa: 35,
-    price_africa_annual: 32,
+    price_ngn: 30000,
+    price_ngn_annual: 300000,
+    price_gbp: 55,
+    price_gbp_annual: 550,
+    price_eur: 60,
+    price_eur_annual: 600,
+    price_usd: 65,
+    price_usd_annual: 650,
+    price_africa: 25,
+    price_africa_annual: 250,
     roi_line: null,
     is_active: true,
     is_popular: true,
@@ -95,6 +101,8 @@ const DEFAULT_PLANS = [
     price_ngn_annual: null,
     price_gbp: null,
     price_gbp_annual: null,
+    price_eur: null,
+    price_eur_annual: null,
     price_usd: null,
     price_usd_annual: null,
     price_africa: null,
@@ -125,6 +133,8 @@ interface Plan {
   price_ngn_annual: number | null
   price_gbp: number | null
   price_gbp_annual: number | null
+  price_eur: number | null
+  price_eur_annual: number | null
   price_usd: number | null
   price_usd_annual: number | null
   price_africa: number | null
@@ -180,6 +190,8 @@ export default function PricingEditor() {
               price_ngn_annual: toNumberOrNull(row.price_ngn_annual),
               price_gbp: toNumberOrNull(row.price_gbp),
               price_gbp_annual: toNumberOrNull(row.price_gbp_annual),
+              price_eur: toNumberOrNull(row.price_eur),
+              price_eur_annual: toNumberOrNull(row.price_eur_annual),
               price_usd: toNumberOrNull(row.price_usd),
               price_usd_annual: toNumberOrNull(row.price_usd_annual),
               price_africa: toNumberOrNull(row.price_africa),
@@ -251,6 +263,8 @@ export default function PricingEditor() {
           price_ngn_annual: p.price_ngn_annual,
           price_gbp: p.price_gbp,
           price_gbp_annual: p.price_gbp_annual,
+          price_eur: p.price_eur,
+          price_eur_annual: p.price_eur_annual,
           price_usd: p.price_usd,
           price_usd_annual: p.price_usd_annual,
           price_africa: p.price_africa,
@@ -289,9 +303,10 @@ export default function PricingEditor() {
 
   const FX_FROM_NGN = {
     NGN: 1,
-    GBP: 29 / 18000,
-    USD: 39 / 18000,
-    Africa: 15 / 18000,
+    GBP: 19 / 12000,
+    EUR: 22 / 12000,
+    USD: 25 / 12000,
+    Africa: 10 / 12000,
   } as const
 
   type CurrencyKey = keyof typeof FX_FROM_NGN
@@ -314,6 +329,7 @@ export default function PricingEditor() {
     if (!k.startsWith('price_')) return null
     if (k.includes('_ngn')) return { currency: 'NGN', billing: k.endsWith('_annual') ? 'annual' : 'monthly' }
     if (k.includes('_gbp')) return { currency: 'GBP', billing: k.endsWith('_annual') ? 'annual' : 'monthly' }
+    if (k.includes('_eur')) return { currency: 'EUR', billing: k.endsWith('_annual') ? 'annual' : 'monthly' }
     if (k.includes('_usd')) return { currency: 'USD', billing: k.endsWith('_annual') ? 'annual' : 'monthly' }
     if (k.includes('_africa')) return { currency: 'Africa', billing: k.endsWith('_annual') ? 'annual' : 'monthly' }
     return null
@@ -326,12 +342,14 @@ export default function PricingEditor() {
     const monthly = {
       NGN: convert(sourceMonthly, parsed.currency, 'NGN'),
       GBP: convert(sourceMonthly, parsed.currency, 'GBP'),
+      EUR: convert(sourceMonthly, parsed.currency, 'EUR'),
       USD: convert(sourceMonthly, parsed.currency, 'USD'),
       Africa: convert(sourceMonthly, parsed.currency, 'Africa'),
     }
     const annual = {
       NGN: toAnnualPerMoFromMonthly(monthly.NGN),
       GBP: toAnnualPerMoFromMonthly(monthly.GBP),
+      EUR: toAnnualPerMoFromMonthly(monthly.EUR),
       USD: toAnnualPerMoFromMonthly(monthly.USD),
       Africa: toAnnualPerMoFromMonthly(monthly.Africa),
     }
@@ -340,6 +358,8 @@ export default function PricingEditor() {
       price_ngn_annual: annual.NGN,
       price_gbp: monthly.GBP,
       price_gbp_annual: annual.GBP,
+      price_eur: monthly.EUR,
+      price_eur_annual: annual.EUR,
       price_usd: monthly.USD,
       price_usd_annual: annual.USD,
       price_africa: monthly.Africa,
@@ -450,6 +470,10 @@ export default function PricingEditor() {
               <div className="grid grid-cols-2 gap-3">
                 <input type="number" placeholder="GBP monthly" value={plan.price_gbp ?? ''} onChange={e => updateNumberField(i, 'price_gbp', e.target.value)} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text)] text-sm" />
                 <input type="number" placeholder="GBP annual (per mo)" value={plan.price_gbp_annual ?? ''} onChange={e => updateNumberField(i, 'price_gbp_annual', e.target.value)} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text)] text-sm" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <input type="number" placeholder="EUR monthly" value={plan.price_eur ?? ''} onChange={e => updateNumberField(i, 'price_eur', e.target.value)} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text)] text-sm" />
+                <input type="number" placeholder="EUR annual (per mo)" value={plan.price_eur_annual ?? ''} onChange={e => updateNumberField(i, 'price_eur_annual', e.target.value)} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text)] text-sm" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <input type="number" placeholder="USD monthly" value={plan.price_usd ?? ''} onChange={e => updateNumberField(i, 'price_usd', e.target.value)} className="w-full bg-[var(--color-surface2)] border border-[var(--color-border)] rounded-lg px-3 py-2 text-[var(--color-text)] text-sm" />

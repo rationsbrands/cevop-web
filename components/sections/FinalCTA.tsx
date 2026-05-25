@@ -21,7 +21,7 @@ export function FinalCTA({ email }: { email?: string }) {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-4">
             <Button href="https://app.cevop.com/signup?currency=NGN" variant="primary" size="lg">
-              Start Free Trial
+              Start for Free
             </Button>
             <Button href="/contact" variant="secondary" size="lg">
               Book a Demo

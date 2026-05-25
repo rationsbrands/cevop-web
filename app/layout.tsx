@@ -36,7 +36,7 @@ const fragmentMono = Fragment_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL('https://cevop.com'),
   title: {
-    default: 'Cevop - restaurant management software',
+    default: 'Cevop — Restaurant Management Software',
     template: '%s | Cevop',
   },
   description:
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   openGraph: {
-    title: 'Cevop - restaurant management software',
+    title: 'Cevop — Restaurant Management Software',
     description:
       'QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download.',
     type: 'website',
@@ -80,9 +80,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    title: 'Cevop — Restaurant Management Software',
     site: '@cevop',
     creator: '@cevop',
-    title: 'Cevop - restaurant management software',
     description:
       'QR ordering, live service display, real-time staff management. Free plan — no credit card, no app download.',
     images: ['/opengraph-image.png'],
@@ -92,7 +92,11 @@ export const metadata: Metadata = {
   },
   manifest: '/manifest.webmanifest',
   icons: {
-    icon: [{ url: '/favicon.png' }],
+    icon: [
+      { url: '/favicon.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
     apple: [{ url: '/apple-touch-icon.png' }],
   },
   appleWebApp: {
