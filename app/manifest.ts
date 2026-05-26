@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Cevop',
+    name: 'Cevop — Restaurant Management Software',
     short_name: 'Cevop',
+    description: 'Restaurant operations platform. QR ordering, live service display, real-time staff management.',
     start_url: '/',
     display: 'standalone',
     background_color: '#000000',

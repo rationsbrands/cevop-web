@@ -51,9 +51,10 @@ export function formatPrice(
  
 export function formatPriceWithPeriod( 
   value: number | null, 
-  currency: SupportedCurrency 
+  currency: SupportedCurrency,
+  period: 'mo' | 'yr' = 'mo'
 ): string { 
   if (value === null) return 'Custom pricing'; 
   if (value === 0) return 'Free forever'; 
-  return `${formatPrice(value, currency)}/month`; 
+  return `${formatPrice(value, currency)}/${period}`; 
 } 

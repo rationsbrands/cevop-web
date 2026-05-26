@@ -36,7 +36,7 @@ function getSavingLines(
     currency === 'EUR' ? '€' : '$'; 
   return { 
     annualMessage: '2 months free', 
-    monthlySavingMessage: `Save ${sym}${saving.toLocaleString()}/year on annual`, 
+    monthlySavingMessage: `Save ${sym}${saving.toLocaleString()}/yr on annual`, 
   }; 
 } 
 
@@ -96,7 +96,7 @@ function PlanCard({ plan, billing, index }: { plan: Plan; billing: Billing; inde
                 {priceString}
               </motion.span>
             </AnimatePresence>
-            {!isFixed && <span className="text-xs text-[var(--color-muted)]">/ mo</span>}
+            {!isFixed && <span className="text-xs text-[var(--color-muted)]">{billing === 'annual' ? '/ yr' : '/ mo'}</span>}
           </div>
           {!isFixed && (
             <p className="text-[10px] text-[var(--color-muted)] mt-1">
